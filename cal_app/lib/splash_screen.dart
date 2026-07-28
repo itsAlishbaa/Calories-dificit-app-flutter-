@@ -1,30 +1,5 @@
-// ============================================================================
-// CALORIE COUNTER — SPLASH SCREEN
-// ============================================================================
-// A pixel-close recreation of the uploaded design:
-//  - Pure black background
-//  - Blurred food bowls floating behind a centered phone mockup
-//  - Phone mockup contains a miniature replica of the app's home UI
-//    (date strip, "calories left" card, macros, meal records)
-//  - Bottom banner: headline copy + a small "Breakfast" stat card
-//
-// HOW TO USE
-// -----------------------------------------------------------------------
-// 1. Drop this file into lib/splash_screen.dart
-// 2. Add these to pubspec.yaml under flutter/assets (or swap for your own):
-//        assets/images/food_bowl_1.png
-//        assets/images/food_bowl_2.png
-//        assets/images/food_bowl_3.png
-//        assets/images/breakfast_icon.png
-//    If you don't have these yet, the screen still renders perfectly using
-//    the built-in vector/icon placeholders below (see _FoodBlob widget) —
-//    swap Image.asset(...) in for the placeholder whenever you're ready.
-// 3. Set SplashScreen() as your `home` in MaterialApp, or navigate to it
-//    first and pushReplacement to your real home screen after a delay.
-// ============================================================================
-
 import 'package:flutter/material.dart';
-import 'main.dart'; // <-- so we can navigate to MyHomePage after the splash
+import 'welcome_screen.dart'; // <-- WelcomeScreen import kar diya gaya hai
 
 // ---------------------------------------------------------------------------
 // COLORS
@@ -72,13 +47,11 @@ class _SplashScreenState extends State<SplashScreen>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    // Navigate to your home page after the splash has been shown.
+    // Navigate to WelcomeScreen after 3 seconds (Standard Splash delay)
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const MyHomePage(title: 'Flutter Demo Home Page'),
-        ),
+        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
       );
     });
   }
@@ -96,38 +69,53 @@ class _SplashScreenState extends State<SplashScreen>
       body: LayoutBuilder(
         builder: (context, constraints) {
           final availableHeight = constraints.maxHeight;
-          final availableWidth = constraints.maxWidth;
 
           return Stack(
             fit: StackFit.expand,
             children: [
-              // ---- floating food imagery, blended softly into the black bg ----
               Positioned(
-                top: availableHeight * 0.16,
-                left: -availableWidth * 0.06,
-                child: const _FoodBlob(diameter: 130, emoji: '🥗'),
+                top: availableHeight * 0.05,
+                left: -40,
+                child: const _FoodBlob(diameter: 150, emoji: '🥗'),
               ),
               Positioned(
-                top: availableHeight * 0.30,
-                right: -availableWidth * 0.06,
-                child: const _FoodBlob(diameter: 110, emoji: '🍳'),
+                top: availableHeight * 0.10,
+                right: -40,
+                child: const _FoodBlob(diameter: 140, emoji: '🍳'),
+              ),
+              Positioned(
+                top: availableHeight * 0.28,
+                left: -45,
+                child: const _FoodBlob(diameter: 130, emoji: '🍇'),
+              ),
+              Positioned(
+                top: availableHeight * 0.32,
+                right: -45,
+                child: const _FoodBlob(diameter: 145, emoji: '🍊'),
+              ),
+              Positioned(
+                bottom: availableHeight * 0.34,
+                left: -40,
+                child: const _FoodBlob(diameter: 135, emoji: '🍅'),
               ),
               Positioned(
                 bottom: availableHeight * 0.30,
-                left: -availableWidth * 0.05,
-                child: const _FoodBlob(diameter: 100, emoji: '🍅'),
+                right: -40,
+                child: const _FoodBlob(diameter: 125, emoji: '🥑'),
               ),
               Positioned(
-                bottom: availableHeight * 0.20,
-                right: -availableWidth * 0.05,
-                child: const _FoodBlob(diameter: 95, emoji: '🥑'),
+                bottom: availableHeight * 0.06,
+                left: -35,
+                child: const _FoodBlob(diameter: 130, emoji: '🍓'),
               ),
-
-              // ------------------------------- content -------------------------------
+              Positioned(
+                bottom: availableHeight * 0.10,
+                right: -35,
+                child: const _FoodBlob(diameter: 125, emoji: '🥕'),
+              ),
               SafeArea(
                 child: Column(
                   children: [
-                    // ---------------- headline ----------------
                     const SizedBox(height: 18),
                     FadeTransition(
                       opacity: _fadeIn,
@@ -161,28 +149,29 @@ class _SplashScreenState extends State<SplashScreen>
                         ],
                       ),
                     ),
-
-                    // ---------------- phone mockup ----------------
-                    // Kept at its fixed design size (250x500 — every inner
-                    // font/padding was tuned for this) and scaled DOWN as a
-                    // whole via FittedBox, so nothing inside it can ever
-                    // overflow, no matter how small the screen is.
                     Expanded(
-                      child: Center(
-                        child: SlideTransition(
-                          position: _phoneSlide,
-                          child: FadeTransition(
-                            opacity: _fadeIn,
-                            child: const FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: _PhoneMockup(width: 250, height: 500),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 360),
+                            child: SlideTransition(
+                              position: _phoneSlide,
+                              child: FadeTransition(
+                                opacity: _fadeIn,
+                                child: const FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: _PhoneMockup(width: 320, height: 640),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-
-                    // ---------------- bottom banner ----------------
                     FadeTransition(
                       opacity: _fadeIn,
                       child: const _BottomBanner(),
@@ -199,14 +188,9 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// ---------------------------------------------------------------------------
-// Decorative floating food image (falls back to an emoji if no asset found)
-// ---------------------------------------------------------------------------
 class _FoodBlob extends StatelessWidget {
   final double diameter;
   final String emoji;
-  /// Optional: pass a real photo instead of the emoji, e.g.
-  /// assetPath: 'assets/images/food_bowl_1.png'
   final String? assetPath;
 
   const _FoodBlob({
@@ -217,10 +201,6 @@ class _FoodBlob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // A soft glow behind it, then the image/emoji is masked with a radial
-    // fade so its edges dissolve into the black background instead of
-    // showing a hard circle outline (this is what made it look like an
-    // "icon" instead of blended background art).
     return SizedBox(
       width: diameter,
       height: diameter,
@@ -246,10 +226,7 @@ class _FoodBlob extends StatelessWidget {
             child: ShaderMask(
               blendMode: BlendMode.dstIn,
               shaderCallback: (bounds) => RadialGradient(
-                colors: [
-                  Colors.white,
-                  Colors.white.withOpacity(0.0),
-                ],
+                colors: [Colors.white, Colors.white.withOpacity(0.0)],
                 stops: const [0.45, 1.0],
               ).createShader(bounds),
               child: assetPath == null
@@ -274,9 +251,6 @@ class _FoodBlob extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// PHONE MOCKUP — replicates the reference app's home screen
-// ---------------------------------------------------------------------------
 class _PhoneMockup extends StatelessWidget {
   final double width;
   final double height;
@@ -311,23 +285,33 @@ class _PhoneMockup extends StatelessWidget {
             Container(color: Colors.white),
             Column(
               children: [
-                // notch / status bar
                 Container(
                   color: Colors.white,
-                  padding:
-                      const EdgeInsets.only(top: 8, left: 14, right: 14, bottom: 4),
+                  padding: const EdgeInsets.only(
+                    top: 8,
+                    left: 14,
+                    right: 14,
+                    bottom: 4,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text('12:01',
-                          style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600)),
+                      Text(
+                        '12:01',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       Icon(Icons.battery_full, size: 10),
                     ],
                   ),
                 ),
-                // app bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
@@ -348,13 +332,10 @@ class _PhoneMockup extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // date strip
                 const _DateStrip(),
                 const SizedBox(height: 8),
-                // calories left card
                 const _CaloriesCard(),
                 const SizedBox(height: 8),
-                // meal record section
                 Expanded(
                   child: Container(
                     width: double.infinity,
@@ -386,7 +367,6 @@ class _PhoneMockup extends StatelessWidget {
                     ),
                   ),
                 ),
-                // bottom nav
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   decoration: const BoxDecoration(
@@ -404,9 +384,17 @@ class _PhoneMockup extends StatelessWidget {
                           color: _Palette.softGreen,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.add, size: 16, color: Colors.white),
+                        child: const Icon(
+                          Icons.add,
+                          size: 16,
+                          color: Colors.white,
+                        ),
                       ),
-                      const Icon(Icons.bar_chart, size: 14, color: _Palette.grey),
+                      const Icon(
+                        Icons.bar_chart,
+                        size: 14,
+                        color: _Palette.grey,
+                      ),
                     ],
                   ),
                 ),
@@ -447,19 +435,28 @@ class _DateStrip extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(d.$1,
-                    style: TextStyle(
-                        fontSize: 6.5,
-                        color: selected ? Colors.white70 : _Palette.grey)),
-                Text(d.$2,
-                    style: TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w700,
-                        color: selected ? Colors.white : _Palette.textDark)),
-                Text(d.$3,
-                    style: TextStyle(
-                        fontSize: 6.5,
-                        color: selected ? Colors.white70 : _Palette.grey)),
+                Text(
+                  d.$1,
+                  style: TextStyle(
+                    fontSize: 6.5,
+                    color: selected ? Colors.white70 : _Palette.grey,
+                  ),
+                ),
+                Text(
+                  d.$2,
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
+                    color: selected ? Colors.white : _Palette.textDark,
+                  ),
+                ),
+                Text(
+                  d.$3,
+                  style: TextStyle(
+                    fontSize: 6.5,
+                    color: selected ? Colors.white70 : _Palette.grey,
+                  ),
+                ),
               ],
             ),
           );
@@ -487,8 +484,10 @@ class _CaloriesCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Calorie left to eat today',
-                    style: TextStyle(fontSize: 7, color: _Palette.grey)),
+                const Text(
+                  'Calorie left to eat today',
+                  style: TextStyle(fontSize: 7, color: _Palette.grey),
+                ),
                 const SizedBox(height: 2),
                 RichText(
                   text: const TextSpan(
@@ -509,16 +508,30 @@ class _CaloriesCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                const Text('Of 3198 kcal',
-                    style: TextStyle(fontSize: 6.5, color: _Palette.grey)),
+                const Text(
+                  'Of 3198 kcal',
+                  style: TextStyle(fontSize: 6.5, color: _Palette.grey),
+                ),
                 const SizedBox(height: 8),
                 Row(
                   children: const [
-                    _MacroDot(color: _Palette.carbsOrange, label: 'Carbs', value: '112.7g'),
+                    _MacroDot(
+                      color: _Palette.carbsOrange,
+                      label: 'Carbs',
+                      value: '112.7g',
+                    ),
                     SizedBox(width: 10),
-                    _MacroDot(color: _Palette.fatYellow, label: 'Fat', value: '26.5g'),
+                    _MacroDot(
+                      color: _Palette.fatYellow,
+                      label: 'Fat',
+                      value: '26.5g',
+                    ),
                     SizedBox(width: 10),
-                    _MacroDot(color: _Palette.proteinBlue, label: 'Protein', value: '16.8g'),
+                    _MacroDot(
+                      color: _Palette.proteinBlue,
+                      label: 'Protein',
+                      value: '16.8g',
+                    ),
                   ],
                 ),
               ],
@@ -531,7 +544,9 @@ class _CaloriesCard extends StatelessWidget {
               shape: BoxShape.circle,
               color: Color(0xFFFFE7C2),
             ),
-            child: const Center(child: Text('🍚', style: TextStyle(fontSize: 18))),
+            child: const Center(
+              child: Text('🍚', style: TextStyle(fontSize: 18)),
+            ),
           ),
         ],
       ),
@@ -543,7 +558,11 @@ class _MacroDot extends StatelessWidget {
   final Color color;
   final String label;
   final String value;
-  const _MacroDot({required this.color, required this.label, required this.value});
+  const _MacroDot({
+    required this.color,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -558,12 +577,20 @@ class _MacroDot extends StatelessWidget {
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
             const SizedBox(width: 3),
-            Text(label, style: const TextStyle(fontSize: 6, color: _Palette.grey)),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 6, color: _Palette.grey),
+            ),
           ],
         ),
-        Text(value,
-            style: const TextStyle(
-                fontSize: 7.5, fontWeight: FontWeight.w700, color: _Palette.textDark)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 7.5,
+            fontWeight: FontWeight.w700,
+            color: _Palette.textDark,
+          ),
+        ),
       ],
     );
   }
@@ -573,7 +600,11 @@ class _MealTile extends StatelessWidget {
   final String label;
   final String kcalText;
   final Color color;
-  const _MealTile({required this.label, required this.kcalText, required this.color});
+  const _MealTile({
+    required this.label,
+    required this.kcalText,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -589,12 +620,19 @@ class _MealTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    style: const TextStyle(
-                        fontSize: 8, fontWeight: FontWeight.w700, color: _Palette.textDark)),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 8,
+                    fontWeight: FontWeight.w700,
+                    color: _Palette.textDark,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(kcalText,
-                    style: const TextStyle(fontSize: 6.5, color: _Palette.grey)),
+                Text(
+                  kcalText,
+                  style: const TextStyle(fontSize: 6.5, color: _Palette.grey),
+                ),
               ],
             ),
           ),
@@ -654,19 +692,26 @@ class _BottomBanner extends StatelessWidget {
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(child: Text('🍳', style: TextStyle(fontSize: 14))),
+                  child: const Center(
+                    child: Text('🍳', style: TextStyle(fontSize: 14)),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Breakfast',
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: _Palette.textDark)),
-                    Text('332/539 Kcal',
-                        style: TextStyle(fontSize: 8, color: _Palette.textDark)),
+                    Text(
+                      'Breakfast',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: _Palette.textDark,
+                      ),
+                    ),
+                    Text(
+                      '332/539 Kcal',
+                      style: TextStyle(fontSize: 8, color: _Palette.textDark),
+                    ),
                   ],
                 ),
               ],
