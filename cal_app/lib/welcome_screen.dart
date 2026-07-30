@@ -16,11 +16,7 @@ class WelcomeScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F2027),
-              Color(0xFF203A43),
-              Color(0xFF2C5364),
-            ],
+            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
           ),
         ),
         child: SafeArea(
@@ -99,7 +95,9 @@ class WelcomeScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF00F2FE).withOpacity(0.3),
+                                  color: const Color(
+                                    0xFF00F2FE,
+                                  ).withOpacity(0.3),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -172,7 +170,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
           ),
         ),
-      )
-     ); // FIXED BRACKETS & SEMICOLON
+      ),
+    ); // FIXED BRACKETS & SEMICOLON
   }
 }
