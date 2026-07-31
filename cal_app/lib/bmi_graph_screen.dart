@@ -1,11 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'onboarding_quiz_code.dart';
 
 class BmiGraphScreen extends StatefulWidget {
-  final double weightKg; // e.g. 75.0
-  final double heightCm; // e.g. 175.0
-  final int age; // e.g. 25
-  final String gender; // e.g. 'Male'
+  final double weightKg;
+  final double heightCm;
+  final int age;
+  final String gender;
 
   const BmiGraphScreen({
     Key? key,
@@ -30,7 +31,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     _calculateBmi();
   }
 
-  // --- BMI Calculation & Categorization ---
   void _calculateBmi() {
     double heightMeters = widget.heightCm / 100.0;
     _bmi = widget.weightKg / (heightMeters * heightMeters);
@@ -50,8 +50,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     }
   }
 
-  // Linear position normalized between 0.0 to 1.0 for the indicator slider
-  // Scales standard BMI range from 15.0 to 35.0
   double _getBmiPositionRatio() {
     double minBmi = 15.0;
     double maxBmi = 35.0;
@@ -136,7 +134,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     );
   }
 
-  // --- TOP TRACKER ---
   Widget _buildTopTracker() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -203,7 +200,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     );
   }
 
-  // --- BMI SCORE & CATEGORY TEXT ---
   Widget _buildBmiDisplay() {
     return Column(
       children: [
@@ -248,7 +244,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     );
   }
 
-  // --- BMI SCALE GAUGE WITH EXACT POINTER ---
   Widget _buildBmiGauge() {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -257,7 +252,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
 
         return Column(
           children: [
-            // Floating Indicator Pointer
             SizedBox(
               height: 24,
               child: Stack(
@@ -280,7 +274,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
               ),
             ),
             const SizedBox(height: 2),
-            // Multi-color Bar
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: SizedBox(
@@ -311,7 +304,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            // Scale Labels
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -345,8 +337,11 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     );
   }
 
-  // --- USER METRICS SUMMARY ROW ---
   Widget _buildUserDetailRow() {
+    String genderShort = widget.gender.isNotEmpty
+        ? widget.gender[0].toUpperCase()
+        : '-';
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       decoration: BoxDecoration(
@@ -372,10 +367,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
             height: 24,
             color: Colors.white.withOpacity(0.15),
           ),
-          _buildMetricItem(
-            "Age / Gender",
-            "${widget.age} / ${widget.gender[0]}",
-          ),
+          _buildMetricItem("Age / Gender", "${widget.age} / $genderShort"),
         ],
       ),
     );
@@ -405,7 +397,6 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     );
   }
 
-  // --- CONTINUE BUTTON ---
   Widget _buildContinueButton() {
     return SizedBox(
       height: 52,
@@ -432,12 +423,18 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
           ),
+
           onPressed: () {
-            // Next Step Action
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OnboardingQuizFlow(),
+              ),
+            );
           },
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 "Finish Step 3",
                 style: TextStyle(

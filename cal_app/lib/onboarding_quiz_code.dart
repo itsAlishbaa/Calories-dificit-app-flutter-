@@ -9,12 +9,24 @@ class OnboardingQuizFlow extends StatefulWidget {
 }
 
 class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
   int _currentStep = 0;
   final int _totalSteps = 6;
 
   // Stores User Answers
   final Map<String, dynamic> _userAnswers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _nextPage() {
     if (_currentStep < _totalSteps - 1) {
@@ -23,7 +35,6 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
         curve: Curves.easeInOut,
       );
     } else {
-      // Flow Completed - Navigate to Main App / Dashboard
       _showCompletionSnackbar();
     }
   }
@@ -39,11 +50,9 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
 
   void _showCompletionSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          "Quiz Completed! Welcome to your personalized plan.",
-        ),
-        backgroundColor: const Color(0xFF00F2FE),
+      const SnackBar(
+        content: Text("Quiz Completed! Welcome to your personalized plan."),
+        backgroundColor: Color(0xFF00F2FE),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -54,7 +63,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
     return showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return _buildGlassPopup(
           emoji: "😴",
           title: "Why Sleep Matters for Weight Loss!",
@@ -62,7 +71,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
               "Lack of sleep disrupts appetite-regulating hormones: Ghrelin (hunger hormone) increases by up to 28%, while Leptin (fullness hormone) drops by 18%. Good sleep accelerates fat burn by 55%!",
           buttonText: "Got it! Continue",
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(dialogContext).pop();
             _nextPage();
           },
         );
@@ -74,7 +83,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
     return showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return _buildGlassPopup(
           emoji: "🔥",
           title: "The Power of Calorie Deficit",
@@ -82,7 +91,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
               "A calorie deficit is the #1 scientifically proven rule for sustainable weight loss. Consuming ~500 kcal less than your TDEE safely sheds around 0.5kg (1lb) of pure fat per week without sacrificing muscle mass!",
           buttonText: "Let's Build My Plan!",
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(dialogContext).pop();
             _nextPage();
           },
         );
@@ -112,8 +121,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Prevents swipe gesture bypass
+                  physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (index) {
                     setState(() {
                       _currentStep = index;
@@ -125,7 +133,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       questionKey: "activity",
                       emojiTitle: "🏃‍♂️ Daily Routine",
                       question: "How do you usually spend your day?",
-                      options: [
+                      options: const [
                         {
                           "emoji": "🪑",
                           "title": "Mostly Sitting",
@@ -148,7 +156,9 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                         },
                       ],
                       onSelect: (val) {
-                        _userAnswers["activity"] = val;
+                        setState(() {
+                          _userAnswers["activity"] = val;
+                        });
                         _nextPage();
                       },
                     ),
@@ -158,7 +168,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       questionKey: "sleep",
                       emojiTitle: "🌙 Sleep Patterns",
                       question: "How many hours do you sleep per night?",
-                      options: [
+                      options: const [
                         {
                           "emoji": "😫",
                           "title": "Less than 5 hours",
@@ -181,8 +191,10 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                         },
                       ],
                       onSelect: (val) {
-                        _userAnswers["sleep"] = val;
-                        _showSleepInfoDialog(); // Trigger scientific sleep popup
+                        setState(() {
+                          _userAnswers["sleep"] = val;
+                        });
+                        _showSleepInfoDialog();
                       },
                     ),
 
@@ -191,7 +203,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       questionKey: "meals_frequency",
                       emojiTitle: "🍽️ Meal Frequency",
                       question: "How many times a day do you eat food?",
-                      options: [
+                      options: const [
                         {
                           "emoji": "⚡",
                           "title": "1 - 2 Big Meals",
@@ -214,7 +226,9 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                         },
                       ],
                       onSelect: (val) {
-                        _userAnswers["meals_frequency"] = val;
+                        setState(() {
+                          _userAnswers["meals_frequency"] = val;
+                        });
                         _nextPage();
                       },
                     ),
@@ -224,7 +238,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       questionKey: "diet_type",
                       emojiTitle: "🥦 Diet Preference",
                       question: "What type of diet do you prefer or follow?",
-                      options: [
+                      options: const [
                         {
                           "emoji": "🥑",
                           "title": "Keto Diet",
@@ -247,7 +261,9 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                         },
                       ],
                       onSelect: (val) {
-                        _userAnswers["diet_type"] = val;
+                        setState(() {
+                          _userAnswers["diet_type"] = val;
+                        });
                         _nextPage();
                       },
                     ),
@@ -260,7 +276,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       questionKey: "tried_deficit",
                       emojiTitle: "⚖️ Weight Loss History",
                       question: "Have you ever tried a Calorie Deficit before?",
-                      options: [
+                      options: const [
                         {
                           "emoji": "✅",
                           "title": "Yes, I have tried it!",
@@ -278,8 +294,10 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                         },
                       ],
                       onSelect: (val) {
-                        _userAnswers["tried_deficit"] = val;
-                        _showCalorieDeficitDialog(); // Trigger final scientific deficit popup
+                        setState(() {
+                          _userAnswers["tried_deficit"] = val;
+                        });
+                        _showCalorieDeficitDialog();
                       },
                     ),
                   ],
@@ -373,69 +391,72 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 14.0),
-              child: InkWell(
-                onTap: () => onSelect(opt["title"]!),
-                borderRadius: BorderRadius.circular(20),
-                child: ClipRRect(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => onSelect(opt["title"]!),
                   borderRadius: BorderRadius.circular(20),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(
-                      padding: const EdgeInsets.all(18),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? const Color(0xFF00F2FE).withOpacity(0.2)
-                            : Colors.white.withOpacity(0.06),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        padding: const EdgeInsets.all(18),
+                        decoration: BoxDecoration(
                           color: isSelected
-                              ? const Color(0xFF00F2FE)
-                              : Colors.white.withOpacity(0.12),
-                          width: isSelected ? 2 : 1,
+                              ? const Color(0xFF00F2FE).withOpacity(0.2)
+                              : Colors.white.withOpacity(0.06),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: isSelected
+                                ? const Color(0xFF00F2FE)
+                                : Colors.white.withOpacity(0.12),
+                            width: isSelected ? 2 : 1,
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black.withOpacity(0.25),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black.withOpacity(0.25),
+                              ),
+                              child: Text(
+                                opt["emoji"]!,
+                                style: const TextStyle(fontSize: 24),
+                              ),
                             ),
-                            child: Text(
-                              opt["emoji"]!,
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  opt["title"]!,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    opt["title"]!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  opt["subtitle"]!,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white.withOpacity(0.5),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    opt["subtitle"]!,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white.withOpacity(0.5),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Icon(
-                            Icons.chevron_right_rounded,
-                            color: Colors.white.withOpacity(0.4),
-                          ),
-                        ],
+                            Icon(
+                              Icons.chevron_right_rounded,
+                              color: Colors.white.withOpacity(0.4),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -450,7 +471,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
 
   // --- DIET BENEFITS SCREEN (PAGE 5) ---
   Widget _buildDietBenefitsScreen() {
-    final List<Map<String, String>> dietBenefits = [
+    final List<Map<String, String>> dietBenefits = const [
       {
         "emoji": "🥑",
         "name": "Keto Diet",
