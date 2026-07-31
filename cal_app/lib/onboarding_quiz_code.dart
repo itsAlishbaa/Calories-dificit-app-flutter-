@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import 'calorie_deficit_explanation_screen.dart';
+
 class OnboardingQuizFlow extends StatefulWidget {
   const OnboardingQuizFlow({Key? key}) : super(key: key);
 
@@ -28,39 +30,32 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
     super.dispose();
   }
 
-  void _nextPage() {
-    if (_currentStep < _totalSteps - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 400),
+  // --- NAVIGATION HELPERS ---
+  void _goToPage(int targetPage) {
+    if (targetPage >= 0 && targetPage < _totalSteps) {
+      setState(() {
+        _currentStep = targetPage;
+      });
+      _pageController.animateToPage(
+        targetPage,
+        duration: const Duration(milliseconds: 350),
         curve: Curves.easeInOut,
       );
-    } else {
-      _showCompletionSnackbar();
     }
+  }
+
+  void _nextPage() {
+    _goToPage(_currentStep + 1);
   }
 
   void _previousPage() {
-    if (_currentStep > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void _showCompletionSnackbar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Quiz Completed! Welcome to your personalized plan."),
-        backgroundColor: Color(0xFF00F2FE),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    _goToPage(_currentStep - 1);
   }
 
   // --- POPUP DIALOGS ---
+  // Dialog 1: Sleep Info
   Future<void> _showSleepInfoDialog() async {
-    return showDialog(
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
@@ -72,15 +67,19 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
           buttonText: "Got it! Continue",
           onPressed: () {
             Navigator.of(dialogContext).pop();
-            _nextPage();
           },
         );
       },
     );
+
+    if (mounted) {
+      _nextPage();
+    }
   }
 
+  // Dialog 2: Calorie Deficit (NAVIGATES TO CalorieDeficitExplanationScreen)
   Future<void> _showCalorieDeficitDialog() async {
-    return showDialog(
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
@@ -91,8 +90,17 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
               "A calorie deficit is the #1 scientifically proven rule for sustainable weight loss. Consuming ~500 kcal less than your TDEE safely sheds around 0.5kg (1lb) of pure fat per week without sacrificing muscle mass!",
           buttonText: "Let's Build My Plan!",
           onPressed: () {
+            // 1. Close Dialog
             Navigator.of(dialogContext).pop();
-            _nextPage();
+
+            // 2. Safe Navigation after dialog pop
+            if (mounted) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const OnboardingGraphWizard(),
+                ),
+              );
+            }
           },
         );
       },
@@ -128,7 +136,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                     });
                   },
                   children: [
-                    // Q1: Daily Activity Level
+                    // Q1: Daily Activity Level (Index 0)
                     _buildOptionQuestionScreen(
                       questionKey: "activity",
                       emojiTitle: "🏃‍♂️ Daily Routine",
@@ -163,7 +171,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       },
                     ),
 
-                    // Q2: Sleep Hours
+                    // Q2: Sleep Hours (Index 1)
                     _buildOptionQuestionScreen(
                       questionKey: "sleep",
                       emojiTitle: "🌙 Sleep Patterns",
@@ -198,7 +206,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       },
                     ),
 
-                    // Q3: Meals Count
+                    // Q3: Meals Count (Index 2)
                     _buildOptionQuestionScreen(
                       questionKey: "meals_frequency",
                       emojiTitle: "🍽️ Meal Frequency",
@@ -233,7 +241,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       },
                     ),
 
-                    // Q4: Diet Style Preference
+                    // Q4: Diet Style Preference (Index 3)
                     _buildOptionQuestionScreen(
                       questionKey: "diet_type",
                       emojiTitle: "🥦 Diet Preference",
@@ -268,10 +276,10 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                       },
                     ),
 
-                    // Page 5: Diet Benefits Deep-Dive (Informational Screen)
+                    // Diet Benefits Deep-Dive (Index 4)
                     _buildDietBenefitsScreen(),
 
-                    // Q6: Calorie Deficit Experience
+                    // Q6: Calorie Deficit Experience (Index 5 - FINAL PAGE)
                     _buildOptionQuestionScreen(
                       questionKey: "tried_deficit",
                       emojiTitle: "⚖️ Weight Loss History",
@@ -469,7 +477,7 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
     );
   }
 
-  // --- DIET BENEFITS SCREEN (PAGE 5) ---
+  // --- DIET BENEFITS SCREEN (INDEX 4) ---
   Widget _buildDietBenefitsScreen() {
     final List<Map<String, String>> dietBenefits = const [
       {
@@ -592,7 +600,9 @@ class _OnboardingQuizFlowState extends State<OnboardingQuizFlow> {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              onPressed: _nextPage,
+              onPressed: () {
+                _goToPage(5);
+              },
               child: const Text(
                 "Understood! Continue",
                 style: TextStyle(

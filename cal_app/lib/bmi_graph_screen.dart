@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'onboarding_quiz_code.dart';
+import 'target_weight_screen.dart'; // Target Weight Screen import ho gayi
 
 class BmiGraphScreen extends StatefulWidget {
   final double weightKg;
@@ -423,12 +423,15 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
           ),
-
+          // MODIFIED NAVIGATION HERE
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const OnboardingQuizFlow(),
+                builder: (context) => TargetWeightScreen(
+                  currentWeightKg: widget.weightKg,
+                  heightCm: widget.heightCm,
+                ),
               ),
             );
           },
