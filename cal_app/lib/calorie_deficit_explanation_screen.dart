@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'main_ui.dart';
 
 class OnboardingGraphWizard extends StatefulWidget {
   final double weightKg;
@@ -70,10 +71,11 @@ class _OnboardingGraphWizardState extends State<OnboardingGraphWizard>
         curve: Curves.easeInOut,
       );
     } else {
-      // Final Action (e.g., Navigate to Home Dashboard)
-      ScaffoldMessenger.of(
+      // 🚀 NAVIGATE TO MAIN UI SCREEN
+      Navigator.pushReplacement(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Onboarding Completed!")));
+        MaterialPageRoute(builder: (context) => const MainUI()),
+      );
     }
   }
 
