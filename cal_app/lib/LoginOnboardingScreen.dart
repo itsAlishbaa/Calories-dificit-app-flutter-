@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'AgeGenderWeightScreen.dart';
+import 'app_palette.dart'; // 👈 Aapki custom AppPalette file import yahan hai
 
 class LoginOnboardingScreen extends StatefulWidget {
   const LoginOnboardingScreen({Key? key}) : super(key: key);
@@ -21,7 +22,6 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
   }
 
   void _nextStep() {
-    // Validation: Check karein name empty toh nahi hai
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -37,7 +37,6 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
         _currentStep++;
       });
 
-      // 🚀 Yahan aapki external file waali screen call ho rahi hai
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AgeGenderWeightScreen()),
@@ -57,7 +56,11 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+            colors: [
+              AppPalette.bgDark,
+              AppPalette.bgPurpleMid,
+              AppPalette.bgPurpleAccent,
+            ],
           ),
         ),
         child: SafeArea(
@@ -80,15 +83,15 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                               width: size.width * 0.9,
                               padding: const EdgeInsets.all(28.0),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.07),
+                                color: AppPalette.glassBg,
                                 borderRadius: BorderRadius.circular(28.0),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.18),
+                                  color: AppPalette.glassBorder,
                                   width: 1.5,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.35),
+                                    color: AppPalette.glassShadow,
                                     blurRadius: 30,
                                     offset: const Offset(0, 15),
                                   ),
@@ -101,20 +104,18 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: const Color(
-                                        0xFF00F2FE,
-                                      ).withOpacity(0.12),
+                                      color: AppPalette.accentNeonViolet
+                                          .withOpacity(0.12),
                                       border: Border.all(
-                                        color: const Color(
-                                          0xFF00F2FE,
-                                        ).withOpacity(0.3),
+                                        color: AppPalette.accentNeonViolet
+                                            .withOpacity(0.3),
                                         width: 1.5,
                                       ),
                                     ),
                                     child: const Icon(
                                       Icons.person_outline_rounded,
                                       size: 30,
-                                      color: Color(0xFF00F2FE),
+                                      color: AppPalette.accentNeonViolet,
                                     ),
                                   ),
                                   const SizedBox(height: 20),
@@ -123,7 +124,7 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF00F2FE),
+                                      color: AppPalette.accentNeonViolet,
                                       letterSpacing: 0.8,
                                     ),
                                   ),
@@ -133,7 +134,7 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                     style: TextStyle(
                                       fontSize: 26,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: AppPalette.pureWhite,
                                       letterSpacing: 0.5,
                                     ),
                                   ),
@@ -143,16 +144,18 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                     style: TextStyle(
                                       fontSize: 13.5,
                                       height: 1.4,
-                                      color: Colors.white.withOpacity(0.65),
+                                      color: AppPalette.pureWhite.withOpacity(
+                                        0.65,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 28),
-                                  Text(
+                                  const Text(
                                     "FULL NAME",
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.white.withOpacity(0.5),
+                                      color: AppPalette.textMuted,
                                       letterSpacing: 1.2,
                                     ),
                                   ),
@@ -160,14 +163,16 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                   TextField(
                                     controller: _nameController,
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: AppPalette.pureWhite,
                                       fontSize: 15,
                                     ),
-                                    cursorColor: const Color(0xFF00F2FE),
+                                    cursorColor: AppPalette.accentNeonViolet,
                                     decoration: InputDecoration(
                                       hintText: "e.g. Alishba",
                                       hintStyle: TextStyle(
-                                        color: Colors.white.withOpacity(0.3),
+                                        color: AppPalette.pureWhite.withOpacity(
+                                          0.3,
+                                        ),
                                         fontSize: 15,
                                       ),
                                       filled: true,
@@ -180,14 +185,15 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(16),
                                         borderSide: BorderSide(
-                                          color: Colors.white.withOpacity(0.12),
+                                          color: AppPalette.pureWhite
+                                              .withOpacity(0.12),
                                           width: 1,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(16),
                                         borderSide: const BorderSide(
-                                          color: Color(0xFF00F2FE),
+                                          color: AppPalette.accentNeonViolet,
                                           width: 1.5,
                                         ),
                                       ),
@@ -201,16 +207,15 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                       decoration: BoxDecoration(
                                         gradient: const LinearGradient(
                                           colors: [
-                                            Color(0xFF4FACFE),
-                                            Color(0xFF00F2FE),
+                                            AppPalette.primaryPurple,
+                                            AppPalette.accentNeonViolet,
                                           ],
                                         ),
                                         borderRadius: BorderRadius.circular(16),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: const Color(
-                                              0xFF00F2FE,
-                                            ).withOpacity(0.35),
+                                            color: AppPalette.accentNeonViolet
+                                                .withOpacity(0.35),
                                             blurRadius: 15,
                                             offset: const Offset(0, 5),
                                           ),
@@ -236,13 +241,13 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black87,
+                                                color: AppPalette.bgDark,
                                               ),
                                             ),
                                             SizedBox(width: 8),
                                             Icon(
                                               Icons.arrow_forward_rounded,
-                                              color: Colors.black87,
+                                              color: AppPalette.bgDark,
                                               size: 20,
                                             ),
                                           ],
@@ -256,12 +261,12 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        Text(
-                          "Step $_currentStep of $_totalSteps",
+                        const Text(
+                          "Step 1 of 4",
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: Colors.white.withOpacity(0.5),
+                            color: AppPalette.textMuted,
                           ),
                         ),
                       ],
@@ -293,26 +298,29 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                 shape: BoxShape.circle,
                 gradient: isActive
                     ? const LinearGradient(
-                        colors: [Color(0xFF4FACFE), Color(0xFF00F2FE)],
+                        colors: [
+                          AppPalette.primaryPurple,
+                          AppPalette.accentNeonViolet,
+                        ],
                       )
                     : null,
                 color: isActive
                     ? null
                     : (isPassed
-                          ? const Color(0xFF00F2FE).withOpacity(0.2)
-                          : Colors.white.withOpacity(0.08)),
+                          ? AppPalette.accentNeonViolet.withOpacity(0.2)
+                          : AppPalette.pureWhite.withOpacity(0.08)),
                 border: Border.all(
                   color: isActive
                       ? Colors.transparent
                       : (isPassed
-                            ? const Color(0xFF00F2FE)
-                            : Colors.white.withOpacity(0.2)),
+                            ? AppPalette.accentNeonViolet
+                            : AppPalette.pureWhite.withOpacity(0.2)),
                   width: 1.5,
                 ),
                 boxShadow: isActive
                     ? [
                         BoxShadow(
-                          color: const Color(0xFF00F2FE).withOpacity(0.4),
+                          color: AppPalette.accentNeonViolet.withOpacity(0.4),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -325,7 +333,7 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: isActive ? Colors.black87 : Colors.white,
+                    color: isActive ? AppPalette.bgDark : AppPalette.pureWhite,
                   ),
                 ),
               ),
@@ -336,8 +344,8 @@ class _LoginOnboardingScreenState extends State<LoginOnboardingScreen> {
                 height: 2,
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 color: isPassed
-                    ? const Color(0xFF00F2FE)
-                    : Colors.white.withOpacity(0.15),
+                    ? AppPalette.accentNeonViolet
+                    : AppPalette.pureWhite.withOpacity(0.15),
               ),
           ],
         );

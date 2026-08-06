@@ -1,5 +1,8 @@
+import 'dart:math' as MinAxisSize;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+
+import 'app_palette.dart';
 import 'target_weight_screen.dart';
 
 class BmiGraphScreen extends StatefulWidget {
@@ -39,34 +42,34 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
     if (_bmi < 18.5) {
       _bmiCategory = "Underweight";
       _themeColor = const Color(0xFFFFB74D); // Soft Orange
-      _backgroundGradient = const [
-        Color(0xFF1E1B18),
-        Color(0xFF2A231C),
-        Color(0xFF141210),
+      _backgroundGradient = [
+        AppPalette.bgDark,
+        const Color(0xFFFFB74D).withOpacity(0.15),
+        AppPalette.bgPurpleMid,
       ];
     } else if (_bmi < 25.0) {
       _bmiCategory = "Normal Weight";
-      _themeColor = const Color(0xFF00E676); // Vibrant Green/Cyan
-      _backgroundGradient = const [
-        Color(0xFF0F2027),
-        Color(0xFF203A43),
-        Color(0xFF2C5364),
+      _themeColor = const Color(0xFF00E676); // Vibrant Green
+      _backgroundGradient = [
+        AppPalette.bgDark,
+        const Color(0xFF00E676).withOpacity(0.15),
+        AppPalette.bgPurpleMid,
       ];
     } else if (_bmi < 30.0) {
       _bmiCategory = "Overweight";
       _themeColor = const Color(0xFFFFD54F); // Amber Yellow
-      _backgroundGradient = const [
-        Color(0xFF232018),
-        Color(0xFF2D281B),
-        Color(0xFF14120E),
+      _backgroundGradient = [
+        AppPalette.bgDark,
+        const Color(0xFFFFD54F).withOpacity(0.15),
+        AppPalette.bgPurpleMid,
       ];
     } else {
       _bmiCategory = "Obese";
-      _themeColor = const Color(0xFFFF5252); // Soft Red Accent
-      _backgroundGradient = const [
-        Color(0xFF251818),
-        Color(0xFF331D1D),
-        Color(0xFF140D0D),
+      _themeColor = const Color(0xFFFF5252); // Soft Red
+      _backgroundGradient = [
+        AppPalette.bgDark,
+        const Color(0xFFFF5252).withOpacity(0.15),
+        AppPalette.bgPurpleMid,
       ];
     }
   }
@@ -108,7 +111,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(28.0),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.06),
+                            color: AppPalette.glassBg,
                             borderRadius: BorderRadius.circular(28.0),
                             border: Border.all(
                               color: _themeColor.withOpacity(0.3),
@@ -116,7 +119,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.4),
+                                color: AppPalette.glassShadow,
                                 blurRadius: 30,
                                 offset: const Offset(0, 15),
                               ),
@@ -145,7 +148,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white.withOpacity(0.5),
+                  color: AppPalette.pureWhite.withOpacity(0.5),
                 ),
               ),
               const SizedBox(height: 12),
@@ -180,14 +183,14 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
                 color: isActive
                     ? null
                     : (isPassed
-                          ? _themeColor.withOpacity(0.2)
-                          : Colors.white.withOpacity(0.08)),
+                        ? _themeColor.withOpacity(0.2)
+                        : AppPalette.pureWhite.withOpacity(0.08)),
                 border: Border.all(
                   color: isActive
                       ? Colors.transparent
                       : (isPassed
-                            ? _themeColor
-                            : Colors.white.withOpacity(0.2)),
+                          ? _themeColor
+                          : AppPalette.pureWhite.withOpacity(0.2)),
                   width: 1.5,
                 ),
               ),
@@ -199,7 +202,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: isActive ? Colors.black87 : Colors.white,
+                          color: isActive ? Colors.black87 : AppPalette.pureWhite,
                         ),
                       ),
               ),
@@ -209,7 +212,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
                 width: 24,
                 height: 2,
                 margin: const EdgeInsets.symmetric(horizontal: 6),
-                color: isPassed ? _themeColor : Colors.white.withOpacity(0.15),
+                color: isPassed ? _themeColor : AppPalette.pureWhite.withOpacity(0.15),
               ),
           ],
         );
@@ -225,7 +228,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
-            color: Colors.white.withOpacity(0.5),
+            color: AppPalette.pureWhite.withOpacity(0.5),
             letterSpacing: 1.2,
           ),
         ),
@@ -339,12 +342,12 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.bold,
-            color: Colors.white.withOpacity(0.7),
+            color: AppPalette.pureWhite.withOpacity(0.7),
           ),
         ),
         Text(
           title,
-          style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.4)),
+          style: TextStyle(fontSize: 10, color: AppPalette.pureWhite.withOpacity(0.4)),
         ),
       ],
     );
@@ -360,7 +363,7 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: AppPalette.pureWhite.withOpacity(0.08)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -372,13 +375,13 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
           Container(
             width: 1,
             height: 24,
-            color: Colors.white.withOpacity(0.15),
+            color: AppPalette.pureWhite.withOpacity(0.15),
           ),
           _buildMetricItem("Height", "${widget.heightCm.toInt()} cm"),
           Container(
             width: 1,
             height: 24,
-            color: Colors.white.withOpacity(0.15),
+            color: AppPalette.pureWhite.withOpacity(0.15),
           ),
           _buildMetricItem("Age / Gender", "${widget.age} / $genderShort"),
         ],
@@ -393,17 +396,17 @@ class _BmiGraphScreenState extends State<BmiGraphScreen> {
           label,
           style: TextStyle(
             fontSize: 10,
-            color: Colors.white.withOpacity(0.4),
+            color: AppPalette.pureWhite.withOpacity(0.4),
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: AppPalette.pureWhite,
           ),
         ),
       ],

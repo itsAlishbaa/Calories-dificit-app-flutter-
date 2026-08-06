@@ -7,52 +7,113 @@ void main() {
 }
 
 // ---------------------------------------------------------------------------
-// GLOBAL APP PALETTE
+// GLOBAL APP PALETTE (#637E9C Steel Blue & White Theme)
 // ---------------------------------------------------------------------------
 class AppPalette {
-  static const primaryPurple = Color(0xFF856699); // Requested Hex Color
-  static const neonGreen = Color(0xFFB4E600);
-  static const softGreen = Color(0xFF7ED957);
-  static const cardCream = Color(0xFFFFF7EC);
-  static const peach = Color(0xFFFFD9A0);
-  static const mintBg = Color(0xFFE9F7E4);
-  static const carbsOrange = Color(0xFFFF9F45);
-  static const fatYellow = Color(0xFFFFD166);
-  static const proteinBlue = Color(0xFF6EC6FF);
-  static const textDark = Color(0xFF20241F);
-  static const grey = Color(0xFF8A8F86);
-  static const backgroundDark = Color(0xFF856699); // Changed to #856699
+  // Slate / Steel Blue Gradient Backgrounds
+  static const bgDark = Color(0xFF1E2836);
+  static const bgPurpleMid = Color(0xFF2D3B4E);
+  static const bgPurpleAccent = Color(0xFF42546B);
+
+  // Core Theme Accents (#637e9c & White variations)
+  static const primaryPurple = Color(0xFF637E9C); // Primary Steel Blue
+  static const accentNeonViolet = Color(
+    0xFFC3D6EC,
+  ); // Light Ice Blue/White Highlight
+  static const accentPink = Color(0xFF8FA8C8); // Soft Steel Accent
+
+  // Glassmorphic Colors
+  static Color glassBg = Colors.white.withOpacity(0.10);
+  static Color glassBorder = Colors.white.withOpacity(0.25);
+  static Color glassShadow = Colors.black.withOpacity(0.25);
+
+  // Neutrals & Text
   static const pureWhite = Colors.white;
+  static const textDark = Color(0xFFF8FAFC);
+  static const textMuted = Color(0xFF94A3B8);
+  static Color borderLight = Colors.white.withOpacity(0.15);
+
+  // Macro Indicators
+  static const carbsOrange = Color(0xFFFB923C);
+  static const fatYellow = Color(0xFFFACC15);
+  static const proteinBlue = Color(0xFF637E9C);
 }
 
 // ---------------------------------------------------------------------------
 // APP THEME DEFINITION
 // ---------------------------------------------------------------------------
 class AppTheme {
-  static ThemeData get darkTheme {
+  static ThemeData get mainTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppPalette.backgroundDark,
+      scaffoldBackgroundColor: AppPalette.bgDark,
       primaryColor: AppPalette.primaryPurple,
       colorScheme: const ColorScheme.dark(
         primary: AppPalette.primaryPurple,
-        secondary: AppPalette.neonGreen,
-        surface: AppPalette.pureWhite,
-        background: AppPalette.backgroundDark,
+        secondary: AppPalette.accentNeonViolet,
+        surface: AppPalette.bgPurpleMid,
+        background: AppPalette.bgDark,
       ),
-      iconTheme: const IconThemeData(color: AppPalette.grey),
+      iconTheme: const IconThemeData(color: AppPalette.textMuted),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w900,
           letterSpacing: 0.5,
-          color: Colors.white,
+          color: AppPalette.pureWhite,
         ),
         bodyMedium: TextStyle(
-          color: Colors.white70,
+          color: Color(0xCCFFFFFF),
           fontSize: 13,
           fontStyle: FontStyle.italic,
+        ),
+      ),
+    );
+  }
+}
+
+// Helper Widget for Glassmorphic Container
+class GlassContainer extends StatelessWidget {
+  final Widget child;
+  final double borderRadius;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final double blur;
+
+  const GlassContainer({
+    super.key,
+    required this.child,
+    this.borderRadius = 16,
+    this.padding,
+    this.margin,
+    this.blur = 15,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: margin,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+          child: Container(
+            padding: padding,
+            decoration: BoxDecoration(
+              color: AppPalette.glassBg,
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(color: AppPalette.glassBorder, width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: AppPalette.glassShadow,
+                  blurRadius: 20,
+                  spreadRadius: -5,
+                ),
+              ],
+            ),
+            child: child,
+          ),
         ),
       ),
     );
@@ -70,7 +131,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Calorie Counter',
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.mainTheme,
       home: const SplashScreen(),
     );
   }
@@ -125,114 +186,133 @@ class _SplashScreenState extends State<SplashScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final availableHeight = constraints.maxHeight;
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppPalette.bgDark,
+              AppPalette.bgPurpleMid,
+              AppPalette.bgPurpleAccent,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final availableHeight = constraints.maxHeight;
 
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              Positioned(
-                top: availableHeight * 0.05,
-                left: -40,
-                child: const _FoodBlob(diameter: 150, emoji: '🥗'),
-              ),
-              Positioned(
-                top: availableHeight * 0.10,
-                right: -40,
-                child: const _FoodBlob(diameter: 140, emoji: '🍳'),
-              ),
-              Positioned(
-                top: availableHeight * 0.28,
-                left: -45,
-                child: const _FoodBlob(diameter: 130, emoji: '🍇'),
-              ),
-              Positioned(
-                top: availableHeight * 0.32,
-                right: -45,
-                child: const _FoodBlob(diameter: 145, emoji: '🍊'),
-              ),
-              Positioned(
-                bottom: availableHeight * 0.34,
-                left: -40,
-                child: const _FoodBlob(diameter: 135, emoji: '🍅'),
-              ),
-              Positioned(
-                bottom: availableHeight * 0.30,
-                right: -40,
-                child: const _FoodBlob(diameter: 125, emoji: '🥑'),
-              ),
-              Positioned(
-                bottom: availableHeight * 0.06,
-                left: -35,
-                child: const _FoodBlob(diameter: 130, emoji: '🍓'),
-              ),
-              Positioned(
-                bottom: availableHeight * 0.10,
-                right: -35,
-                child: const _FoodBlob(diameter: 125, emoji: '🥕'),
-              ),
-              SafeArea(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 18),
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: Column(
-                        children: [
-                          ShaderMask(
-                            shaderCallback: (bounds) => const LinearGradient(
-                              colors: [AppPalette.pureWhite, AppPalette.peach],
-                            ).createShader(bounds),
-                            child: Text(
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                Positioned(
+                  top: availableHeight * 0.05,
+                  left: -40,
+                  child: const _FoodBlob(diameter: 150, emoji: '🥗'),
+                ),
+                Positioned(
+                  top: availableHeight * 0.10,
+                  right: -40,
+                  child: const _FoodBlob(diameter: 140, emoji: '🍳'),
+                ),
+                Positioned(
+                  top: availableHeight * 0.28,
+                  left: -45,
+                  child: const _FoodBlob(diameter: 130, emoji: '🍇'),
+                ),
+                Positioned(
+                  top: availableHeight * 0.32,
+                  right: -45,
+                  child: const _FoodBlob(diameter: 145, emoji: '🍊'),
+                ),
+                Positioned(
+                  bottom: availableHeight * 0.34,
+                  left: -40,
+                  child: const _FoodBlob(diameter: 135, emoji: '🍅'),
+                ),
+                Positioned(
+                  bottom: availableHeight * 0.30,
+                  right: -40,
+                  child: const _FoodBlob(diameter: 125, emoji: '🥑'),
+                ),
+                Positioned(
+                  bottom: availableHeight * 0.06,
+                  left: -35,
+                  child: const _FoodBlob(diameter: 130, emoji: '🍓'),
+                ),
+                Positioned(
+                  bottom: availableHeight * 0.10,
+                  right: -35,
+                  child: const _FoodBlob(diameter: 125, emoji: '🥕'),
+                ),
+                SafeArea(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 18),
+                      FadeTransition(
+                        opacity: _fadeIn,
+                        child: Column(
+                          children: [
+                            Text(
                               'CALORIE\nCounter',
                               textAlign: TextAlign.center,
-                              style: theme.textTheme.headlineLarge,
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                shadows: [
+                                  Shadow(
+                                    color: AppPalette.primaryPurple.withOpacity(
+                                      0.6,
+                                    ),
+                                    blurRadius: 16,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '"Track Calorie"',
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
+                            const SizedBox(height: 6),
+                            Text(
+                              '"Track Calorie"',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ],
                         ),
-                        child: Center(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 360),
-                            child: SlideTransition(
-                              position: _phoneSlide,
-                              child: FadeTransition(
-                                opacity: _fadeIn,
-                                child: const FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: _PhoneMockup(width: 320, height: 640),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 360),
+                              child: SlideTransition(
+                                position: _phoneSlide,
+                                child: FadeTransition(
+                                  opacity: _fadeIn,
+                                  child: const FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: _PhoneMockup(
+                                      width: 320,
+                                      height: 640,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: const _BottomBanner(),
-                    ),
-                    const SizedBox(height: 18),
-                  ],
+                      FadeTransition(
+                        opacity: _fadeIn,
+                        child: const _BottomBanner(),
+                      ),
+                      const SizedBox(height: 18),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -241,13 +321,8 @@ class _SplashScreenState extends State<SplashScreen>
 class _FoodBlob extends StatelessWidget {
   final double diameter;
   final String emoji;
-  final String? assetPath;
 
-  const _FoodBlob({
-    required this.diameter,
-    required this.emoji,
-    this.assetPath,
-  });
+  const _FoodBlob({required this.diameter, required this.emoji});
 
   @override
   Widget build(BuildContext context) {
@@ -264,36 +339,16 @@ class _FoodBlob extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.15),
-                  blurRadius: 45,
-                  spreadRadius: 6,
+                  color: AppPalette.primaryPurple.withOpacity(0.35),
+                  blurRadius: 30,
+                  spreadRadius: 4,
                 ),
               ],
             ),
           ),
           Opacity(
-            opacity: 0.6,
-            child: ShaderMask(
-              blendMode: BlendMode.dstIn,
-              shaderCallback: (bounds) => RadialGradient(
-                colors: [Colors.white, Colors.white.withOpacity(0.0)],
-                stops: const [0.45, 1.0],
-              ).createShader(bounds),
-              child: assetPath == null
-                  ? Text(emoji, style: TextStyle(fontSize: diameter * 0.55))
-                  : ClipOval(
-                      child: Image.asset(
-                        assetPath!,
-                        width: diameter,
-                        height: diameter,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Text(
-                          emoji,
-                          style: TextStyle(fontSize: diameter * 0.55),
-                        ),
-                      ),
-                    ),
-            ),
+            opacity: 0.55,
+            child: Text(emoji, style: TextStyle(fontSize: diameter * 0.55)),
           ),
         ],
       ),
@@ -312,151 +367,168 @@ class _PhoneMockup extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: AppPalette.pureWhite, // Outer mockup container set to white
+        color: const Color(0xFF18212D),
         borderRadius: BorderRadius.circular(38),
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 6),
+        border: Border.all(color: AppPalette.glassBorder, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 40,
-            spreadRadius: 4,
+            color: AppPalette.primaryPurple.withOpacity(0.4),
+            blurRadius: 35,
+            spreadRadius: 2,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(30),
-        child: Stack(
-          children: [
-            Container(color: AppPalette.pureWhite),
-            Column(
-              children: [
-                Container(
-                  color: AppPalette.pureWhite,
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                    left: 14,
-                    right: 14,
-                    bottom: 4,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppPalette.bgDark, AppPalette.bgPurpleMid],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.only(
+                  top: 8,
+                  left: 14,
+                  right: 14,
+                  bottom: 4,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      '12:01',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        color: AppPalette.pureWhite,
+                      ),
+                    ),
+                    Icon(
+                      Icons.battery_full,
+                      size: 10,
+                      color: AppPalette.pureWhite,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Expanded(
+                      child: Text(
+                        'Calorie Counter',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          color: AppPalette.accentNeonViolet,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.settings_outlined,
+                      size: 13,
+                      color: AppPalette.accentNeonViolet,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 6),
+              const _DateStrip(),
+              const SizedBox(height: 8),
+              const _CaloriesCard(),
+              const SizedBox(height: 8),
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        '12:01',
+                        'Meal Record',
                         style: TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                          color: AppPalette.textDark,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          color: AppPalette.pureWhite,
                         ),
                       ),
-                      Icon(
-                        Icons.battery_full,
-                        size: 10,
-                        color: AppPalette.textDark,
+                      SizedBox(height: 6),
+                      _MealTile(
+                        label: 'Breakfast',
+                        kcalText: '464/799 kcal',
+                        icon: '🍳',
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Expanded(
-                        child: Text(
-                          'Calorie Counter - Track Calorie',
-                          style: TextStyle(
-                            fontSize: 8.5,
-                            fontWeight: FontWeight.w700,
-                            color: AppPalette.textDark,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Icon(
-                        Icons.settings,
-                        size: 12,
-                        color: AppPalette.textDark,
+                      SizedBox(height: 6),
+                      _MealTile(
+                        label: 'Lunch',
+                        kcalText: '279/1119 kcal',
+                        icon: '🥗',
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                const _DateStrip(),
-                const SizedBox(height: 8),
-                const _CaloriesCard(),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Meal Record',
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                            color: AppPalette.textDark,
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        _MealTile(
-                          label: 'Breakfast',
-                          kcalText: '464/799 kcal',
-                          color: AppPalette.peach,
-                        ),
-                        SizedBox(height: 6),
-                        _MealTile(
-                          label: 'Lunch',
-                          kcalText: '279/1119 kcal',
-                          color: AppPalette.mintBg,
-                        ),
-                      ],
+              ),
+              GlassContainer(
+                borderRadius: 0,
+                blur: 10,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(
+                      Icons.home_rounded,
+                      size: 16,
+                      color: AppPalette.accentNeonViolet,
                     ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  decoration: const BoxDecoration(
-                    color: AppPalette.pureWhite,
-                    border: Border(top: BorderSide(color: Color(0xFFEDEDED))),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Icon(Icons.home, size: 14, color: AppPalette.grey),
-                      Container(
-                        width: 26,
-                        height: 26,
-                        decoration: const BoxDecoration(
-                          color: AppPalette.primaryPurple,
-                          shape: BoxShape.circle,
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            AppPalette.primaryPurple,
+                            AppPalette.accentNeonViolet,
+                          ],
                         ),
-                        child: const Icon(
-                          Icons.add,
-                          size: 16,
-                          color: Colors.white,
-                        ),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppPalette.primaryPurple.withOpacity(0.5),
+                            blurRadius: 8,
+                          ),
+                        ],
                       ),
-                      const Icon(
-                        Icons.bar_chart,
-                        size: 14,
-                        color: AppPalette.grey,
+                      child: const Icon(
+                        Icons.add,
+                        size: 16,
+                        color: Colors.white,
                       ),
-                    ],
-                  ),
+                    ),
+                    const Icon(
+                      Icons.bar_chart_rounded,
+                      size: 16,
+                      color: AppPalette.textMuted,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -475,45 +547,55 @@ class _DateStrip extends StatelessWidget {
       ('Jan', '11', 'Sat', false),
       ('Jan', '12', 'Sun', false),
     ];
-    return SizedBox(
-      height: 44,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      height: 46,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: days.map((d) {
           final selected = d.$4;
-          return Container(
-            width: 34,
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            decoration: BoxDecoration(
-              color: selected ? AppPalette.primaryPurple : Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  d.$1,
-                  style: TextStyle(
-                    fontSize: 6.5,
-                    color: selected ? Colors.white70 : AppPalette.grey,
+          return GlassContainer(
+            borderRadius: 10,
+            blur: 5,
+            child: Container(
+              width: 30,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: selected
+                    ? AppPalette.primaryPurple.withOpacity(0.5)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+                border: selected
+                    ? Border.all(color: AppPalette.accentNeonViolet, width: 1)
+                    : null,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    d.$1,
+                    style: TextStyle(
+                      fontSize: 6.5,
+                      color: selected ? Colors.white : AppPalette.textMuted,
+                    ),
                   ),
-                ),
-                Text(
-                  d.$2,
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                    color: selected ? Colors.white : AppPalette.textDark,
+                  Text(
+                    d.$2,
+                    style: TextStyle(
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w700,
+                      color: selected ? Colors.white : AppPalette.textDark,
+                    ),
                   ),
-                ),
-                Text(
-                  d.$3,
-                  style: TextStyle(
-                    fontSize: 6.5,
-                    color: selected ? Colors.white70 : AppPalette.grey,
+                  Text(
+                    d.$3,
+                    style: TextStyle(
+                      fontSize: 6.5,
+                      color: selected ? Colors.white : AppPalette.textMuted,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         }).toList(),
@@ -527,13 +609,9 @@ class _CaloriesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GlassContainer(
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppPalette.cardCream,
-        borderRadius: BorderRadius.circular(14),
-      ),
+      padding: const EdgeInsets.all(12),
       child: Row(
         children: [
           Expanded(
@@ -542,7 +620,7 @@ class _CaloriesCard extends StatelessWidget {
               children: [
                 const Text(
                   'Calorie left to eat today',
-                  style: TextStyle(fontSize: 7, color: AppPalette.grey),
+                  style: TextStyle(fontSize: 7.5, color: AppPalette.textMuted),
                 ),
                 const SizedBox(height: 2),
                 RichText(
@@ -551,14 +629,17 @@ class _CaloriesCard extends StatelessWidget {
                       TextSpan(
                         text: '2455 ',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w800,
-                          color: AppPalette.textDark,
+                          color: AppPalette.accentNeonViolet,
                         ),
                       ),
                       TextSpan(
                         text: 'kcal',
-                        style: TextStyle(fontSize: 8, color: AppPalette.grey),
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: AppPalette.textMuted,
+                        ),
                       ),
                     ],
                   ),
@@ -566,7 +647,7 @@ class _CaloriesCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 const Text(
                   'Of 3198 kcal',
-                  style: TextStyle(fontSize: 6.5, color: AppPalette.grey),
+                  style: TextStyle(fontSize: 7, color: AppPalette.textMuted),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -576,13 +657,13 @@ class _CaloriesCard extends StatelessWidget {
                       label: 'Carbs',
                       value: '112.7g',
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 8),
                     _MacroDot(
                       color: AppPalette.fatYellow,
                       label: 'Fat',
                       value: '26.5g',
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 8),
                     _MacroDot(
                       color: AppPalette.proteinBlue,
                       label: 'Protein',
@@ -596,9 +677,10 @@ class _CaloriesCard extends StatelessWidget {
           Container(
             width: 44,
             height: 44,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xFFFFE7C2),
+              color: AppPalette.primaryPurple.withOpacity(0.3),
+              border: Border.all(color: AppPalette.glassBorder),
             ),
             child: const Center(
               child: Text('🍚', style: TextStyle(fontSize: 18)),
@@ -635,7 +717,10 @@ class _MacroDot extends StatelessWidget {
             const SizedBox(width: 3),
             Text(
               label,
-              style: const TextStyle(fontSize: 6, color: AppPalette.grey),
+              style: const TextStyle(
+                fontSize: 6.5,
+                color: AppPalette.textMuted,
+              ),
             ),
           ],
         ),
@@ -655,23 +740,23 @@ class _MacroDot extends StatelessWidget {
 class _MealTile extends StatelessWidget {
   final String label;
   final String kcalText;
-  final Color color;
+  final String icon;
+
   const _MealTile({
     required this.label,
     required this.kcalText,
-    required this.color,
+    required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GlassContainer(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      borderRadius: 12,
       child: Row(
         children: [
+          Text(icon, style: const TextStyle(fontSize: 12)),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -679,15 +764,17 @@ class _MealTile extends StatelessWidget {
                 Text(
                   label,
                   style: const TextStyle(
-                    fontSize: 8,
+                    fontSize: 8.5,
                     fontWeight: FontWeight.w700,
                     color: AppPalette.textDark,
                   ),
                 ),
-                const SizedBox(height: 2),
                 Text(
                   kcalText,
-                  style: const TextStyle(fontSize: 6.5, color: AppPalette.grey),
+                  style: const TextStyle(
+                    fontSize: 7,
+                    color: AppPalette.textMuted,
+                  ),
                 ),
               ],
             ),
@@ -695,11 +782,15 @@ class _MealTile extends StatelessWidget {
           Container(
             width: 20,
             height: 20,
-            decoration: const BoxDecoration(
-              color: AppPalette.primaryPurple,
+            decoration: BoxDecoration(
+              color: AppPalette.primaryPurple.withOpacity(0.35),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.add, size: 12, color: Colors.white),
+            child: const Icon(
+              Icons.add,
+              size: 12,
+              color: AppPalette.accentNeonViolet,
+            ),
           ),
         ],
       ),
@@ -729,20 +820,17 @@ class _BottomBanner extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Container(
+          GlassContainer(
+            borderRadius: 18,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppPalette.peach,
-              borderRadius: BorderRadius.circular(18),
-            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 26,
-                  height: 26,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: AppPalette.primaryPurple.withOpacity(0.35),
                     shape: BoxShape.circle,
                   ),
                   child: const Center(
@@ -757,13 +845,16 @@ class _BottomBanner extends StatelessWidget {
                       'Breakfast',
                       style: TextStyle(
                         fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: AppPalette.textDark,
+                        fontWeight: FontWeight.w800,
+                        color: AppPalette.pureWhite,
                       ),
                     ),
                     Text(
                       '332/539 Kcal',
-                      style: TextStyle(fontSize: 8, color: AppPalette.textDark),
+                      style: TextStyle(
+                        fontSize: 8,
+                        color: AppPalette.textMuted,
+                      ),
                     ),
                   ],
                 ),

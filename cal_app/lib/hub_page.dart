@@ -4,6 +4,32 @@ void main() {
   runApp(const HealthAndFitnessApp());
 }
 
+// =============================================================================
+// 🎨 APP COLOR PALETTE
+// =============================================================================
+class AppColors {
+  // Brand / Theme Colors
+  static const Color primary = Color(0xFF0D9488); // Deep Teal
+  static const Color primaryLight = Color(0xFFCCFBF1); // Soft Mint/Teal Accent
+  static const Color accent = Color(0xFF10B981); // Emerald Green
+
+  // Background & Surfaces
+  static const Color background = Color(0xFFF8FAFC); // Cool Slate Neutral
+  static const Color surface = Colors.white;
+
+  // Text Colors
+  static const Color textPrimary = Color(0xFF0F172A); // Dark Slate
+  static const Color textSecondary = Color(0xFF64748B); // Slate Grey
+  static const Color textMuted = Color(0xFF94A3B8);
+
+  // Status & Tag Colors
+  static const Color successBg = Color(0xFFD1FAE5);
+  static const Color successText = Color(0xFF059669);
+  static const Color errorBg = Color(0xFFFEE2E2);
+  static const Color errorText = Color(0xFFDC2626);
+  static const Color border = Color(0xFFE2E8F0);
+}
+
 class HealthAndFitnessApp extends StatelessWidget {
   const HealthAndFitnessApp({Key? key}) : super(key: key);
 
@@ -13,9 +39,13 @@ class HealthAndFitnessApp extends StatelessWidget {
       title: 'Fitness & Health Companion',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        scaffoldBackgroundColor: const Color(0xFFF9FAFB),
+        scaffoldBackgroundColor: AppColors.background,
         fontFamily: 'Roboto',
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          primary: AppColors.primary,
+          surface: AppColors.surface,
+        ),
       ),
       home: const MainHomeScreen(),
     );
@@ -49,7 +79,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
           "Health & Fitness Hub",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF4F46E5),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
       ),
@@ -61,8 +91,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             _currentIndex = index;
           });
         },
-        selectedItemColor: const Color(0xFF4F46E5),
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.textMuted,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.restaurant_menu),
@@ -83,7 +113,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 }
 
 // =============================================================================
-// 🥗 2. HEALTHY DIET RECIPES SECTION
+// 🥗 RECIPES SECTION
 // =============================================================================
 class RecipesHubSection extends StatelessWidget {
   const RecipesHubSection({Key? key}) : super(key: key);
@@ -132,7 +162,6 @@ class RecipesHubSection extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Recipe Header Banner
         Container(
           height: 130,
           decoration: BoxDecoration(
@@ -175,17 +204,15 @@ class RecipesHubSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-
-        // Dropdown Recipe Cards
         ...recipes.map((r) {
           return Container(
             margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.indigo.withOpacity(0.04),
+                  color: AppColors.primary.withOpacity(0.06),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -209,7 +236,7 @@ class RecipesHubSection extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2937),
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 subtitle: Padding(
@@ -220,7 +247,7 @@ class RecipesHubSection extends StatelessWidget {
                         "🔥 ${r['calories']}",
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF059669),
+                          color: AppColors.accent,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -228,7 +255,7 @@ class RecipesHubSection extends StatelessWidget {
                         "⏱️ ${r['time']}",
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF6B7280),
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -243,13 +270,13 @@ class RecipesHubSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Divider(),
+                        const Divider(color: AppColors.border),
                         const Text(
                           "🛒 Ingredients:",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: Color(0xFF374151),
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -261,7 +288,7 @@ class RecipesHubSection extends StatelessWidget {
                                 const Icon(
                                   Icons.circle,
                                   size: 6,
-                                  color: Color(0xFF4F46E5),
+                                  color: AppColors.primary,
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
@@ -269,7 +296,7 @@ class RecipesHubSection extends StatelessWidget {
                                     ing,
                                     style: const TextStyle(
                                       fontSize: 13,
-                                      color: Color(0xFF4B5563),
+                                      color: AppColors.textSecondary,
                                     ),
                                   ),
                                 ),
@@ -283,7 +310,7 @@ class RecipesHubSection extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: Color(0xFF374151),
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -294,7 +321,7 @@ class RecipesHubSection extends StatelessWidget {
                               "• $step",
                               style: const TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF4B5563),
+                                color: AppColors.textSecondary,
                                 height: 1.3,
                               ),
                             ),
@@ -315,7 +342,7 @@ class RecipesHubSection extends StatelessWidget {
 }
 
 // =============================================================================
-// 🤖 3. AI MENTOR SECTION (Cover Banner + Clean Chat UI)
+// 🤖 AI MENTOR SECTION
 // =============================================================================
 class MentorHubSection extends StatefulWidget {
   const MentorHubSection({Key? key}) : super(key: key);
@@ -358,7 +385,6 @@ class _MentorHubSectionState extends State<MentorHubSection> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // AI Mentor Header Banner
         Container(
           height: 110,
           width: double.infinity,
@@ -396,7 +422,7 @@ class _MentorHubSectionState extends State<MentorHubSection> {
                     ),
                     Text(
                       "Online • Ready to answer your questions",
-                      style: TextStyle(color: Colors.greenAccent, fontSize: 12),
+                      style: TextStyle(color: AppColors.accent, fontSize: 12),
                     ),
                   ],
                 ),
@@ -404,11 +430,9 @@ class _MentorHubSectionState extends State<MentorHubSection> {
             ),
           ),
         ),
-
-        // Quick Suggestions
         Container(
           height: 45,
-          color: Colors.white,
+          color: AppColors.surface,
           child: ListView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -419,8 +443,6 @@ class _MentorHubSectionState extends State<MentorHubSection> {
             ],
           ),
         ),
-
-        // Chat Area
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -438,7 +460,7 @@ class _MentorHubSectionState extends State<MentorHubSection> {
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: isUser ? const Color(0xFF4F46E5) : Colors.white,
+                    color: isUser ? AppColors.primary : AppColors.surface,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
@@ -450,7 +472,7 @@ class _MentorHubSectionState extends State<MentorHubSection> {
                   child: Text(
                     messages[i]['text']!,
                     style: TextStyle(
-                      color: isUser ? Colors.white : const Color(0xFF1F2937),
+                      color: isUser ? Colors.white : AppColors.textPrimary,
                       fontSize: 14,
                     ),
                   ),
@@ -459,13 +481,11 @@ class _MentorHubSectionState extends State<MentorHubSection> {
             },
           ),
         ),
-
-        // Text Input Bar
         Container(
           padding: const EdgeInsets.all(12),
           decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(top: BorderSide(color: Color(0xFFE5E7EB))),
+            color: AppColors.surface,
+            border: Border(top: BorderSide(color: AppColors.border)),
           ),
           child: Row(
             children: [
@@ -474,13 +494,14 @@ class _MentorHubSectionState extends State<MentorHubSection> {
                   controller: _controller,
                   decoration: const InputDecoration(
                     hintText: "Ask mentor anything...",
+                    hintStyle: TextStyle(color: AppColors.textMuted),
                     border: InputBorder.none,
                   ),
                   onSubmitted: (val) => _send(val),
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.send_rounded, color: Color(0xFF4F46E5)),
+                icon: const Icon(Icons.send_rounded, color: AppColors.primary),
                 onPressed: () => _send(_controller.text),
               ),
             ],
@@ -494,10 +515,11 @@ class _MentorHubSectionState extends State<MentorHubSection> {
     return Container(
       margin: const EdgeInsets.only(right: 8),
       child: ActionChip(
-        backgroundColor: const Color(0xFFEEF2FF),
+        backgroundColor: AppColors.primaryLight,
+        side: BorderSide.none,
         label: Text(
           label,
-          style: const TextStyle(fontSize: 11, color: Color(0xFF4F46E5)),
+          style: const TextStyle(fontSize: 11, color: AppColors.primary),
         ),
         onPressed: () => _send(label),
       ),
@@ -506,7 +528,7 @@ class _MentorHubSectionState extends State<MentorHubSection> {
 }
 
 // =============================================================================
-// 💡 4. MYTHS, DO'S & DON'TS SECTION
+// 💡 MYTHS & DO'S SECTION
 // =============================================================================
 class MythsHubSection extends StatelessWidget {
   const MythsHubSection({Key? key}) : super(key: key);
@@ -543,7 +565,6 @@ class MythsHubSection extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Banner Image
         Container(
           height: 140,
           decoration: BoxDecoration(
@@ -586,14 +607,13 @@ class MythsHubSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-
         ...items.map((item) {
           final isMythOrDont = item['tag']!.contains('❌');
           return Container(
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6),
@@ -609,16 +629,16 @@ class MythsHubSection extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isMythOrDont
-                        ? const Color(0xFFFEE2E2)
-                        : const Color(0xFFD1FAE5),
+                        ? AppColors.errorBg
+                        : AppColors.successBg,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     item['tag']!,
                     style: TextStyle(
                       color: isMythOrDont
-                          ? const Color(0xFFDC2626)
-                          : const Color(0xFF059669),
+                          ? AppColors.errorText
+                          : AppColors.successText,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -630,7 +650,7 @@ class MythsHubSection extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2937),
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -638,7 +658,7 @@ class MythsHubSection extends StatelessWidget {
                   item['desc']!,
                   style: const TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF6B7280),
+                    color: AppColors.textSecondary,
                     height: 1.35,
                   ),
                 ),

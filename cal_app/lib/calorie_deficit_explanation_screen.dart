@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'app_palette.dart';
 import 'main_ui.dart';
 
 class OnboardingGraphWizard extends StatefulWidget {
@@ -84,7 +85,11 @@ class _OnboardingGraphWizardState extends State<OnboardingGraphWizard>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+            colors: [
+              AppPalette.bgDark,
+              AppPalette.bgPurpleMid,
+              AppPalette.bgPurpleAccent,
+            ],
           ),
         ),
         child: SafeArea(
@@ -151,20 +156,23 @@ class TopStepTracker extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: isActive
                     ? const LinearGradient(
-                        colors: [Color(0xFF4FACFE), Color(0xFF00F2FE)],
+                        colors: [
+                          AppPalette.primaryPurple,
+                          AppPalette.accentNeonViolet,
+                        ],
                       )
                     : null,
                 color: isActive
                     ? null
                     : (isPassed
-                          ? const Color(0xFF00F2FE).withValues(alpha: 0.2)
-                          : Colors.white.withValues(alpha: 0.08)),
+                          ? AppPalette.accentNeonViolet.withOpacity(0.2)
+                          : AppPalette.pureWhite.withOpacity(0.08)),
                 border: Border.all(
                   color: isActive
                       ? Colors.transparent
                       : (isPassed
-                            ? const Color(0xFF00F2FE)
-                            : Colors.white.withValues(alpha: 0.2)),
+                            ? AppPalette.accentNeonViolet
+                            : AppPalette.pureWhite.withOpacity(0.2)),
                   width: 1.5,
                 ),
               ),
@@ -173,14 +181,16 @@ class TopStepTracker extends StatelessWidget {
                     ? const Icon(
                         Icons.check,
                         size: 18,
-                        color: Color(0xFF00F2FE),
+                        color: AppPalette.accentNeonViolet,
                       )
                     : Text(
                         "${index + 1}",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: isActive ? Colors.black87 : Colors.white,
+                          color: isActive
+                              ? AppPalette.bgDark
+                              : AppPalette.pureWhite,
                         ),
                       ),
               ),
@@ -192,8 +202,8 @@ class TopStepTracker extends StatelessWidget {
                 height: 2,
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 color: isPassed
-                    ? const Color(0xFF00F2FE)
-                    : Colors.white.withValues(alpha: 0.15),
+                    ? AppPalette.accentNeonViolet
+                    : AppPalette.pureWhite.withOpacity(0.15),
               ),
           ],
         );
@@ -225,17 +235,17 @@ class BmiScreen extends StatelessWidget {
     final double bmi = weightKg / (heightMeters * heightMeters);
 
     String category = "Normal Weight";
-    Color bmiColor = const Color(0xFF00F2FE);
+    Color bmiColor = AppPalette.accentNeonViolet;
 
     if (bmi < 18.5) {
       category = "Underweight";
-      bmiColor = Colors.orangeAccent;
+      bmiColor = AppPalette.accentPink;
     } else if (bmi >= 25.0 && bmi < 30) {
       category = "Overweight";
-      bmiColor = Colors.amberAccent;
+      bmiColor = AppPalette.accentPink;
     } else if (bmi >= 30) {
       category = "Obese";
-      bmiColor = Colors.redAccent;
+      bmiColor = AppPalette.accentPink;
     }
 
     return Padding(
@@ -246,12 +256,12 @@ class BmiScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 "YOUR CURRENT BMI",
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: AppPalette.textMuted,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -271,7 +281,7 @@ class BmiScreen extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: bmiColor.withValues(alpha: 0.15),
+                  color: bmiColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: bmiColor, width: 1.5),
                 ),
@@ -288,7 +298,7 @@ class BmiScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: AppPalette.glassShadow,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -326,18 +336,15 @@ class MetricTile extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 10,
-            color: Colors.white.withValues(alpha: 0.4),
-          ),
+          style: TextStyle(fontSize: 10, color: AppPalette.textMuted),
         ),
         const SizedBox(height: 4),
-        Text(
+         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: AppPalette.textDark,
           ),
         ),
       ],
@@ -363,7 +370,7 @@ class EducationalGraphScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF00F2FE),
+              color: AppPalette.accentNeonViolet,
               letterSpacing: 1.2,
             ),
           ),
@@ -373,16 +380,13 @@ class EducationalGraphScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppPalette.textDark,
             ),
           ),
           const SizedBox(height: 6),
-          Text(
+          const Text(
             "A steady 500 kcal daily deficit results in ~0.5kg of weight loss every week.",
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.white.withValues(alpha: 0.7),
-            ),
+            style: TextStyle(fontSize: 12, color: AppPalette.textMuted),
           ),
           const SizedBox(height: 20),
           Expanded(
@@ -394,7 +398,7 @@ class EducationalGraphScreen extends StatelessWidget {
                     show: true,
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (v) => FlLine(
-                      color: Colors.white.withValues(alpha: 0.08),
+                      color: AppPalette.pureWhite.withOpacity(0.08),
                       strokeWidth: 1,
                     ),
                   ),
@@ -409,10 +413,10 @@ class EducationalGraphScreen extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 28,
-                        getTitlesWidget: (v, m) => Text(
-                          "${v.toInt()}k",
+                        getTitlesWidget: (v, m) => const Text(
+                          "",
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: AppPalette.textMuted,
                             fontSize: 10,
                           ),
                         ),
@@ -423,8 +427,8 @@ class EducationalGraphScreen extends StatelessWidget {
                         showTitles: true,
                         getTitlesWidget: (v, m) => Text(
                           "W${v.toInt()}",
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
+                          style: const TextStyle(
+                            color: AppPalette.textMuted,
                             fontSize: 10,
                           ),
                         ),
@@ -441,7 +445,7 @@ class EducationalGraphScreen extends StatelessWidget {
                         FlSpot(4, 14.0),
                       ],
                       isCurved: true,
-                      color: const Color(0xFF00F2FE),
+                      color: AppPalette.accentNeonViolet,
                       barWidth: 3,
                     ),
                     LineChartBarData(
@@ -452,7 +456,7 @@ class EducationalGraphScreen extends StatelessWidget {
                         FlSpot(4, 2.5),
                       ],
                       isCurved: true,
-                      color: Colors.orangeAccent,
+                      color: AppPalette.accentPink,
                       barWidth: 3,
                     ),
                   ],
@@ -508,16 +512,13 @@ class ProjectionGraphScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppPalette.textDark,
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
+              const Text(
                 "If you stay on track vs. maintaining current habits.",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white.withValues(alpha: 0.7),
-                ),
+                style: TextStyle(fontSize: 12, color: AppPalette.textMuted),
               ),
               const SizedBox(height: 16),
               Row(
@@ -527,7 +528,7 @@ class ProjectionGraphScreen extends StatelessWidget {
                       title: "No Deficit",
                       change: "+2.5 kg",
                       total: "${noDeficitTarget.toStringAsFixed(1)} kg",
-                      color: Colors.redAccent,
+                      color: AppPalette.accentPink,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -536,7 +537,7 @@ class ProjectionGraphScreen extends StatelessWidget {
                       title: "With Deficit",
                       change: "-6.0 kg",
                       total: "${deficitTarget.toStringAsFixed(1)} kg",
-                      color: const Color(0xFF00E676),
+                      color: AppPalette.accentNeonViolet,
                     ),
                   ),
                 ],
@@ -553,7 +554,7 @@ class ProjectionGraphScreen extends StatelessWidget {
                         show: true,
                         drawVerticalLine: false,
                         getDrawingHorizontalLine: (v) => FlLine(
-                          color: Colors.white.withValues(alpha: 0.08),
+                          color: AppPalette.pureWhite.withOpacity(0.08),
                           strokeWidth: 1,
                         ),
                       ),
@@ -570,8 +571,8 @@ class ProjectionGraphScreen extends StatelessWidget {
                             reservedSize: 34,
                             getTitlesWidget: (v, m) => Text(
                               "${v.toInt()}kg",
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.5),
+                              style: const TextStyle(
+                                color: AppPalette.textMuted,
                                 fontSize: 10,
                               ),
                             ),
@@ -586,8 +587,8 @@ class ProjectionGraphScreen extends StatelessWidget {
                               if (idx >= 0 && idx < labels.length) {
                                 return Text(
                                   labels[idx],
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.5),
+                                  style: const TextStyle(
+                                    color: AppPalette.textMuted,
                                     fontSize: 10,
                                   ),
                                 );
@@ -607,7 +608,7 @@ class ProjectionGraphScreen extends StatelessWidget {
                             FlSpot(3, noDeficitM3),
                           ],
                           isCurved: true,
-                          color: Colors.redAccent,
+                          color: AppPalette.accentPink,
                           barWidth: 3.5,
                           dotData: const FlDotData(show: true),
                         ),
@@ -619,14 +620,12 @@ class ProjectionGraphScreen extends StatelessWidget {
                             FlSpot(3, deficitM3),
                           ],
                           isCurved: true,
-                          color: const Color(0xFF00E676),
+                          color: AppPalette.accentNeonViolet,
                           barWidth: 3.5,
                           dotData: const FlDotData(show: true),
                           belowBarData: BarAreaData(
                             show: true,
-                            color: const Color(
-                              0xFF00E676,
-                            ).withValues(alpha: 0.1),
+                            color: AppPalette.accentNeonViolet.withOpacity(0.1),
                           ),
                         ),
                       ],
@@ -661,9 +660,9 @@ class StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -680,7 +679,7 @@ class StatCard extends StatelessWidget {
           Text(
             total,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppPalette.textDark,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -721,9 +720,9 @@ class GlassContainer extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.07),
+            color: AppPalette.glassBg,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+            border: Border.all(color: AppPalette.glassBorder),
           ),
           child: child,
         ),
@@ -759,7 +758,7 @@ class BottomActionButton extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF4FACFE), Color(0xFF00F2FE)],
+              colors: [AppPalette.primaryPurple, AppPalette.accentNeonViolet],
             ),
             borderRadius: BorderRadius.circular(16),
           ),
@@ -780,13 +779,13 @@ class BottomActionButton extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: AppPalette.bgDark,
                   ),
                 ),
                 const SizedBox(width: 8),
                 const Icon(
                   Icons.arrow_forward_rounded,
-                  color: Colors.black87,
+                  color: AppPalette.bgDark,
                   size: 20,
                 ),
               ],

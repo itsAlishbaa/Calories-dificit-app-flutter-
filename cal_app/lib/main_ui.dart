@@ -750,7 +750,9 @@ class _MainUIState extends State<MainUI> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UserProfileScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => UserProfileScreen(),
+                    ),
                   );
                 },
                 child: const CircleAvatar(

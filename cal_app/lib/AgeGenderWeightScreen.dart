@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import 'app_palette.dart'; // Palette File Import
 import 'bmi_graph_screen.dart';
 
 class AgeGenderWeightScreen extends StatefulWidget {
@@ -13,11 +14,6 @@ class AgeGenderWeightScreen extends StatefulWidget {
 class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
   final PageController _pageController = PageController();
   int _internalStep = 0; // 0: Gender, 1: Age, 2: Weight, 3: Height
-
-  // Primary Theme Colors
-  static const Color primaryColor = Color(0xFF9653AC);
-  static const Color primaryGradientStart = Color(0xFFB86AD4);
-  static const Color primaryGradientEnd = Color(0xFF9653AC);
 
   // Form Values
   String? _selectedGender;
@@ -120,11 +116,11 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: primaryColor,
-              onPrimary: Colors.white,
-              surface: Color(0xFF1F1225),
-              onSurface: Colors.white,
+            colorScheme: ColorScheme.dark(
+              primary: AppPalette.primaryPurple,
+              onPrimary: AppPalette.pureWhite,
+              surface: AppPalette.bgDark,
+              onSurface: AppPalette.pureWhite,
             ),
           ),
           child: child!,
@@ -155,11 +151,15 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF180E1C), Color(0xFF281332), Color(0xFF381845)],
+            colors: [
+              AppPalette.bgDark,
+              AppPalette.bgPurpleMid,
+              AppPalette.bgPurpleAccent,
+            ],
           ),
         ),
         child: SafeArea(
@@ -180,15 +180,15 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                           height: 520,
                           padding: const EdgeInsets.all(28.0),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.07),
+                            color: AppPalette.glassBg,
                             borderRadius: BorderRadius.circular(28.0),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.18),
+                              color: AppPalette.glassBorder,
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.35),
+                                color: AppPalette.glassShadow,
                                 blurRadius: 30,
                                 offset: const Offset(0, 15),
                               ),
@@ -220,7 +220,7 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white.withOpacity(0.5),
+                  color: AppPalette.pureWhite.withOpacity(0.5),
                 ),
               ),
               const SizedBox(height: 16),
@@ -248,33 +248,40 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: isActive
-                    ? const LinearGradient(
-                        colors: [primaryGradientStart, primaryGradientEnd],
+                    ? LinearGradient(
+                        colors: [
+                          AppPalette.accentNeonViolet,
+                          AppPalette.primaryPurple,
+                        ],
                       )
                     : null,
                 color: isActive
                     ? null
                     : (isPassed
-                          ? primaryColor.withOpacity(0.25)
-                          : Colors.white.withOpacity(0.08)),
+                          ? AppPalette.primaryPurple.withOpacity(0.25)
+                          : AppPalette.pureWhite.withOpacity(0.08)),
                 border: Border.all(
                   color: isActive
                       ? Colors.transparent
                       : (isPassed
-                            ? primaryColor
-                            : Colors.white.withOpacity(0.2)),
+                            ? AppPalette.primaryPurple
+                            : AppPalette.pureWhite.withOpacity(0.2)),
                   width: 1.5,
                 ),
               ),
               child: Center(
                 child: isPassed
-                    ? const Icon(Icons.check, size: 18, color: primaryColor)
+                    ? Icon(
+                        Icons.check,
+                        size: 18,
+                        color: AppPalette.primaryPurple,
+                      )
                     : Text(
                         "$stepNumber",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: AppPalette.pureWhite,
                         ),
                       ),
               ),
@@ -284,7 +291,9 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                 width: 24,
                 height: 2,
                 margin: const EdgeInsets.symmetric(horizontal: 6),
-                color: isPassed ? primaryColor : Colors.white.withOpacity(0.15),
+                color: isPassed
+                    ? AppPalette.primaryPurple
+                    : AppPalette.pureWhite.withOpacity(0.15),
               ),
           ],
         );
@@ -299,20 +308,20 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       children: [
         _buildHeaderIcon(Icons.wc_rounded),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           "STEP 2.1",
           style: TextStyle(
             fontSize: 12,
-            color: primaryColor,
+            color: AppPalette.primaryPurple,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Text(
+        Text(
           "Select Your Gender",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: AppPalette.pureWhite,
           ),
         ),
         const SizedBox(height: 20),
@@ -339,11 +348,13 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: isSelected
-              ? primaryColor.withOpacity(0.25)
+              ? AppPalette.primaryPurple.withOpacity(0.25)
               : Colors.black.withOpacity(0.2),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? primaryColor : Colors.white.withOpacity(0.12),
+            color: isSelected
+                ? AppPalette.primaryPurple
+                : AppPalette.pureWhite.withOpacity(0.12),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -351,14 +362,16 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
           children: [
             Icon(
               icon,
-              color: isSelected ? primaryColor : Colors.white60,
+              color: isSelected
+                  ? AppPalette.primaryPurple
+                  : AppPalette.textMuted,
               size: 28,
             ),
             const SizedBox(height: 8),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white60,
+                color: isSelected ? AppPalette.pureWhite : AppPalette.textMuted,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -375,20 +388,20 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       children: [
         _buildHeaderIcon(Icons.calendar_month_rounded),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           "STEP 2.2",
           style: TextStyle(
             fontSize: 12,
-            color: primaryColor,
+            color: AppPalette.primaryPurple,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Text(
+        Text(
           "How old are you?",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: AppPalette.pureWhite,
           ),
         ),
         const SizedBox(height: 20),
@@ -400,17 +413,22 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
             decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.2),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: primaryColor.withOpacity(0.5)),
+              border: Border.all(
+                color: AppPalette.primaryPurple.withOpacity(0.5),
+              ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.edit_calendar_rounded, color: primaryColor),
+                Icon(
+                  Icons.edit_calendar_rounded,
+                  color: AppPalette.primaryPurple,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   _selectedDate == null
                       ? "Select Date of Birth (Calendar)"
                       : "DOB: ${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                  style: TextStyle(color: AppPalette.pureWhite, fontSize: 14),
                 ),
               ],
             ),
@@ -421,7 +439,7 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
           child: Text(
             "— OR ENTER AGE MANUALLY —",
             style: TextStyle(
-              color: Colors.white.withOpacity(0.4),
+              color: AppPalette.pureWhite.withOpacity(0.4),
               fontSize: 10,
               letterSpacing: 1,
             ),
@@ -431,19 +449,21 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
         TextField(
           controller: _ageController,
           keyboardType: TextInputType.number,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: AppPalette.pureWhite),
           decoration: InputDecoration(
             hintText: "Enter Age (e.g. 25)",
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+            hintStyle: TextStyle(color: AppPalette.pureWhite.withOpacity(0.3)),
             filled: true,
             fillColor: Colors.black.withOpacity(0.2),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.12)),
+              borderSide: BorderSide(
+                color: AppPalette.pureWhite.withOpacity(0.12),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: AppPalette.primaryPurple),
             ),
           ),
           onChanged: (val) {
@@ -490,20 +510,20 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           "STEP 2.3",
           style: TextStyle(
             fontSize: 12,
-            color: primaryColor,
+            color: AppPalette.primaryPurple,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Text(
+        Text(
           "What is your weight?",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: AppPalette.pureWhite,
           ),
         ),
         const SizedBox(height: 20),
@@ -512,7 +532,7 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.25),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.12)),
+            border: Border.all(color: AppPalette.pureWhite.withOpacity(0.12)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -527,9 +547,9 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                     });
                   }
                 },
-                icon: const Icon(
+                icon: Icon(
                   Icons.remove_circle_outline,
-                  color: primaryColor,
+                  color: AppPalette.primaryPurple,
                   size: 32,
                 ),
               ),
@@ -538,16 +558,19 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                 children: [
                   Text(
                     displayedWeight.toStringAsFixed(1),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppPalette.pureWhite,
                     ),
                   ),
                   const SizedBox(width: 6),
                   Text(
                     _isKg ? "kg" : "lbs",
-                    style: const TextStyle(fontSize: 16, color: primaryColor),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppPalette.primaryPurple,
+                    ),
                   ),
                 ],
               ),
@@ -559,9 +582,9 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                     _weightController.text = val.toStringAsFixed(1);
                   });
                 },
-                icon: const Icon(
+                icon: Icon(
                   Icons.add_circle_outline,
-                  color: primaryColor,
+                  color: AppPalette.primaryPurple,
                   size: 32,
                 ),
               ),
@@ -572,23 +595,29 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
         TextField(
           controller: _weightController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          style: const TextStyle(color: Colors.white, fontSize: 14),
+          style: TextStyle(color: AppPalette.pureWhite, fontSize: 14),
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.edit, color: primaryColor, size: 18),
+            prefixIcon: Icon(
+              Icons.edit,
+              color: AppPalette.primaryPurple,
+              size: 18,
+            ),
             hintText: "Or type weight directly...",
             hintStyle: TextStyle(
-              color: Colors.white.withOpacity(0.3),
+              color: AppPalette.pureWhite.withOpacity(0.3),
               fontSize: 13,
             ),
             filled: true,
             fillColor: Colors.black.withOpacity(0.2),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.12)),
+              borderSide: BorderSide(
+                color: AppPalette.pureWhite.withOpacity(0.12),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: AppPalette.primaryPurple),
             ),
           ),
           onChanged: (val) {
@@ -640,20 +669,20 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           "STEP 2.4",
           style: TextStyle(
             fontSize: 12,
-            color: primaryColor,
+            color: AppPalette.primaryPurple,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Text(
+        Text(
           "What is your height?",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: AppPalette.pureWhite,
           ),
         ),
         const SizedBox(height: 20),
@@ -662,7 +691,7 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.25),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.12)),
+            border: Border.all(color: AppPalette.pureWhite.withOpacity(0.12)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -677,9 +706,9 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                     });
                   }
                 },
-                icon: const Icon(
+                icon: Icon(
                   Icons.remove_circle_outline,
-                  color: primaryColor,
+                  color: AppPalette.primaryPurple,
                   size: 32,
                 ),
               ),
@@ -688,16 +717,19 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                 children: [
                   Text(
                     displayedHeight.toStringAsFixed(1),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppPalette.pureWhite,
                     ),
                   ),
                   const SizedBox(width: 6),
                   Text(
                     _isCm ? "cm" : "ft",
-                    style: const TextStyle(fontSize: 16, color: primaryColor),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppPalette.primaryPurple,
+                    ),
                   ),
                 ],
               ),
@@ -709,9 +741,9 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
                     _heightController.text = val.toStringAsFixed(1);
                   });
                 },
-                icon: const Icon(
+                icon: Icon(
                   Icons.add_circle_outline,
-                  color: primaryColor,
+                  color: AppPalette.primaryPurple,
                   size: 32,
                 ),
               ),
@@ -722,23 +754,29 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
         TextField(
           controller: _heightController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          style: const TextStyle(color: Colors.white, fontSize: 14),
+          style: TextStyle(color: AppPalette.pureWhite, fontSize: 14),
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.edit, color: primaryColor, size: 18),
+            prefixIcon: Icon(
+              Icons.edit,
+              color: AppPalette.primaryPurple,
+              size: 18,
+            ),
             hintText: "Or type height directly...",
             hintStyle: TextStyle(
-              color: Colors.white.withOpacity(0.3),
+              color: AppPalette.pureWhite.withOpacity(0.3),
               fontSize: 13,
             ),
             filled: true,
             fillColor: Colors.black.withOpacity(0.2),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.12)),
+              borderSide: BorderSide(
+                color: AppPalette.pureWhite.withOpacity(0.12),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: primaryColor),
+              borderSide: BorderSide(color: AppPalette.primaryPurple),
             ),
           ),
           onChanged: (val) {
@@ -775,7 +813,7 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.15)),
+        border: Border.all(color: AppPalette.pureWhite.withOpacity(0.15)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -785,13 +823,17 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
-                color: isFirstUnit ? primaryColor : Colors.transparent,
+                color: isFirstUnit
+                    ? AppPalette.primaryPurple
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 unit1,
                 style: TextStyle(
-                  color: isFirstUnit ? Colors.white : Colors.white70,
+                  color: isFirstUnit
+                      ? AppPalette.pureWhite
+                      : AppPalette.textMuted,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
@@ -803,13 +845,17 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
-                color: !isFirstUnit ? primaryColor : Colors.transparent,
+                color: !isFirstUnit
+                    ? AppPalette.primaryPurple
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 unit2,
                 style: TextStyle(
-                  color: !isFirstUnit ? Colors.white : Colors.white70,
+                  color: !isFirstUnit
+                      ? AppPalette.pureWhite
+                      : AppPalette.textMuted,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
@@ -827,10 +873,13 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: primaryColor.withOpacity(0.15),
-        border: Border.all(color: primaryColor.withOpacity(0.4), width: 1.5),
+        color: AppPalette.primaryPurple.withOpacity(0.15),
+        border: Border.all(
+          color: AppPalette.primaryPurple.withOpacity(0.4),
+          width: 1.5,
+        ),
       ),
-      child: Icon(icon, size: 28, color: primaryColor),
+      child: Icon(icon, size: 28, color: AppPalette.primaryPurple),
     );
   }
 
@@ -840,13 +889,13 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       width: double.infinity,
       child: Container(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [primaryGradientStart, primaryGradientEnd],
+          gradient: LinearGradient(
+            colors: [AppPalette.accentNeonViolet, AppPalette.primaryPurple],
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: primaryColor.withOpacity(0.35),
+              color: AppPalette.primaryPurple.withOpacity(0.35),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -866,16 +915,16 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
             children: [
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppPalette.pureWhite,
                 ),
               ),
               const SizedBox(width: 6),
-              const Icon(
+              Icon(
                 Icons.arrow_forward_rounded,
-                color: Colors.white,
+                color: AppPalette.pureWhite,
                 size: 18,
               ),
             ],
@@ -890,12 +939,12 @@ class _AgeGenderWeightScreenState extends State<AgeGenderWeightScreen> {
       height: 50,
       width: 50,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: AppPalette.pureWhite.withOpacity(0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.15)),
+        border: Border.all(color: AppPalette.pureWhite.withOpacity(0.15)),
       ),
       child: IconButton(
-        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+        icon: Icon(Icons.arrow_back_rounded, color: AppPalette.pureWhite),
         onPressed: onTap,
       ),
     );
