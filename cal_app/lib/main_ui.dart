@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'profile.dart';
 
 // =============================================================================
 // 🏠 MAIN UI DASHBOARD
@@ -738,16 +739,25 @@ class _MainUIState extends State<MainUI> {
               },
             ),
             // Profile Picture
+            // Profile Picture
             Container(
               padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(color: const Color(0xFFC7F464), width: 2),
               ),
-              child: const CircleAvatar(
-                radius: 14,
-                backgroundImage: NetworkImage(
-                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80",
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserProfileScreen()),
+                  );
+                },
+                child: const CircleAvatar(
+                  radius: 14,
+                  backgroundImage: NetworkImage(
+                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80",
+                  ),
                 ),
               ),
             ),

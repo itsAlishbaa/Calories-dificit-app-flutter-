@@ -1,26 +1,16 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'welcome_screen.dart'; 
+import 'welcome_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(), // App yahan se Splash Screen start karegi
-    );
-  }
-}
-
 // ---------------------------------------------------------------------------
-// COLORS
+// GLOBAL APP PALETTE
 // ---------------------------------------------------------------------------
-class _Palette {
+class AppPalette {
+  static const primaryPurple = Color(0xFF856699); // Requested Hex Color
   static const neonGreen = Color(0xFFB4E600);
   static const softGreen = Color(0xFF7ED957);
   static const cardCream = Color(0xFFFFF7EC);
@@ -31,6 +21,59 @@ class _Palette {
   static const proteinBlue = Color(0xFF6EC6FF);
   static const textDark = Color(0xFF20241F);
   static const grey = Color(0xFF8A8F86);
+  static const backgroundDark = Color(0xFF856699); // Changed to #856699
+  static const pureWhite = Colors.white;
+}
+
+// ---------------------------------------------------------------------------
+// APP THEME DEFINITION
+// ---------------------------------------------------------------------------
+class AppTheme {
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: AppPalette.backgroundDark,
+      primaryColor: AppPalette.primaryPurple,
+      colorScheme: const ColorScheme.dark(
+        primary: AppPalette.primaryPurple,
+        secondary: AppPalette.neonGreen,
+        surface: AppPalette.pureWhite,
+        background: AppPalette.backgroundDark,
+      ),
+      iconTheme: const IconThemeData(color: AppPalette.grey),
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 0.5,
+          color: Colors.white,
+        ),
+        bodyMedium: TextStyle(
+          color: Colors.white70,
+          fontSize: 13,
+          fontStyle: FontStyle.italic,
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// MAIN APP ENTRY
+// ---------------------------------------------------------------------------
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Calorie Counter',
+      theme: AppTheme.darkTheme,
+      home: const SplashScreen(),
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -63,7 +106,6 @@ class _SplashScreenState extends State<SplashScreen>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    // 3 seconds ke baad WelcomeScreen par navigate karega
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
@@ -80,8 +122,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final availableHeight = constraints.maxHeight;
@@ -139,28 +183,18 @@ class _SplashScreenState extends State<SplashScreen>
                         children: [
                           ShaderMask(
                             shaderCallback: (bounds) => const LinearGradient(
-                              colors: [_Palette.neonGreen, _Palette.softGreen],
+                              colors: [AppPalette.pureWhite, AppPalette.peach],
                             ).createShader(bounds),
-                            child: const Text(
+                            child: Text(
                               'CALORIE\nCounter',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w900,
-                                height: 1.0,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
-                              ),
+                              style: theme.textTheme.headlineLarge,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             '"Track Calorie"',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontStyle: FontStyle.italic,
-                            ),
+                            style: theme.textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -230,7 +264,7 @@ class _FoodBlob extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: _Palette.softGreen.withOpacity(0.18),
+                  color: Colors.white.withOpacity(0.15),
                   blurRadius: 45,
                   spreadRadius: 6,
                 ),
@@ -238,7 +272,7 @@ class _FoodBlob extends StatelessWidget {
             ),
           ),
           Opacity(
-            opacity: 0.5,
+            opacity: 0.6,
             child: ShaderMask(
               blendMode: BlendMode.dstIn,
               shaderCallback: (bounds) => RadialGradient(
@@ -275,22 +309,19 @@ class _PhoneMockup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final phoneWidth = width;
-    final phoneHeight = height;
-
     return Container(
-      width: phoneWidth,
-      height: phoneHeight,
+      width: width,
+      height: height,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: AppPalette.pureWhite, // Outer mockup container set to white
         borderRadius: BorderRadius.circular(38),
-        border: Border.all(color: const Color(0xFF2B2B2B), width: 6),
+        border: Border.all(color: const Color(0xFFE0E0E0), width: 6),
         boxShadow: [
           BoxShadow(
-            color: _Palette.neonGreen.withOpacity(0.18),
-            blurRadius: 60,
-            spreadRadius: 6,
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 40,
+            spreadRadius: 4,
           ),
         ],
       ),
@@ -298,11 +329,11 @@ class _PhoneMockup extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         child: Stack(
           children: [
-            Container(color: Colors.white),
+            Container(color: AppPalette.pureWhite),
             Column(
               children: [
                 Container(
-                  color: Colors.white,
+                  color: AppPalette.pureWhite,
                   padding: const EdgeInsets.only(
                     top: 8,
                     left: 14,
@@ -317,9 +348,14 @@ class _PhoneMockup extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.w600,
+                          color: AppPalette.textDark,
                         ),
                       ),
-                      Icon(Icons.battery_full, size: 10),
+                      Icon(
+                        Icons.battery_full,
+                        size: 10,
+                        color: AppPalette.textDark,
+                      ),
                     ],
                   ),
                 ),
@@ -337,13 +373,17 @@ class _PhoneMockup extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 8.5,
                             fontWeight: FontWeight.w700,
-                            color: _Palette.textDark,
+                            color: AppPalette.textDark,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Icon(Icons.settings, size: 12, color: _Palette.textDark),
+                      Icon(
+                        Icons.settings,
+                        size: 12,
+                        color: AppPalette.textDark,
+                      ),
                     ],
                   ),
                 ),
@@ -364,20 +404,20 @@ class _PhoneMockup extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w700,
-                            color: _Palette.textDark,
+                            color: AppPalette.textDark,
                           ),
                         ),
                         SizedBox(height: 6),
                         _MealTile(
                           label: 'Breakfast',
                           kcalText: '464/799 kcal',
-                          color: _Palette.peach,
+                          color: AppPalette.peach,
                         ),
                         SizedBox(height: 6),
                         _MealTile(
                           label: 'Lunch',
                           kcalText: '279/1119 kcal',
-                          color: _Palette.mintBg,
+                          color: AppPalette.mintBg,
                         ),
                       ],
                     ),
@@ -386,18 +426,18 @@ class _PhoneMockup extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppPalette.pureWhite,
                     border: Border(top: BorderSide(color: Color(0xFFEDEDED))),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Icon(Icons.home, size: 14, color: _Palette.grey),
+                      const Icon(Icons.home, size: 14, color: AppPalette.grey),
                       Container(
                         width: 26,
                         height: 26,
                         decoration: const BoxDecoration(
-                          color: _Palette.softGreen,
+                          color: AppPalette.primaryPurple,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -409,7 +449,7 @@ class _PhoneMockup extends StatelessWidget {
                       const Icon(
                         Icons.bar_chart,
                         size: 14,
-                        color: _Palette.grey,
+                        color: AppPalette.grey,
                       ),
                     ],
                   ),
@@ -445,7 +485,7 @@ class _DateStrip extends StatelessWidget {
             width: 34,
             padding: const EdgeInsets.symmetric(vertical: 4),
             decoration: BoxDecoration(
-              color: selected ? _Palette.softGreen : Colors.transparent,
+              color: selected ? AppPalette.primaryPurple : Colors.transparent,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -455,7 +495,7 @@ class _DateStrip extends StatelessWidget {
                   d.$1,
                   style: TextStyle(
                     fontSize: 6.5,
-                    color: selected ? Colors.white70 : _Palette.grey,
+                    color: selected ? Colors.white70 : AppPalette.grey,
                   ),
                 ),
                 Text(
@@ -463,14 +503,14 @@ class _DateStrip extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w700,
-                    color: selected ? Colors.white : _Palette.textDark,
+                    color: selected ? Colors.white : AppPalette.textDark,
                   ),
                 ),
                 Text(
                   d.$3,
                   style: TextStyle(
                     fontSize: 6.5,
-                    color: selected ? Colors.white70 : _Palette.grey,
+                    color: selected ? Colors.white70 : AppPalette.grey,
                   ),
                 ),
               ],
@@ -491,7 +531,7 @@ class _CaloriesCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: _Palette.cardCream,
+        color: AppPalette.cardCream,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -502,7 +542,7 @@ class _CaloriesCard extends StatelessWidget {
               children: [
                 const Text(
                   'Calorie left to eat today',
-                  style: TextStyle(fontSize: 7, color: _Palette.grey),
+                  style: TextStyle(fontSize: 7, color: AppPalette.grey),
                 ),
                 const SizedBox(height: 2),
                 RichText(
@@ -513,12 +553,12 @@ class _CaloriesCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
-                          color: _Palette.textDark,
+                          color: AppPalette.textDark,
                         ),
                       ),
                       TextSpan(
                         text: 'kcal',
-                        style: TextStyle(fontSize: 8, color: _Palette.grey),
+                        style: TextStyle(fontSize: 8, color: AppPalette.grey),
                       ),
                     ],
                   ),
@@ -526,25 +566,25 @@ class _CaloriesCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 const Text(
                   'Of 3198 kcal',
-                  style: TextStyle(fontSize: 6.5, color: _Palette.grey),
+                  style: TextStyle(fontSize: 6.5, color: AppPalette.grey),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: const [
                     _MacroDot(
-                      color: _Palette.carbsOrange,
+                      color: AppPalette.carbsOrange,
                       label: 'Carbs',
                       value: '112.7g',
                     ),
                     SizedBox(width: 10),
                     _MacroDot(
-                      color: _Palette.fatYellow,
+                      color: AppPalette.fatYellow,
                       label: 'Fat',
                       value: '26.5g',
                     ),
                     SizedBox(width: 10),
                     _MacroDot(
-                      color: _Palette.proteinBlue,
+                      color: AppPalette.proteinBlue,
                       label: 'Protein',
                       value: '16.8g',
                     ),
@@ -595,7 +635,7 @@ class _MacroDot extends StatelessWidget {
             const SizedBox(width: 3),
             Text(
               label,
-              style: const TextStyle(fontSize: 6, color: _Palette.grey),
+              style: const TextStyle(fontSize: 6, color: AppPalette.grey),
             ),
           ],
         ),
@@ -604,7 +644,7 @@ class _MacroDot extends StatelessWidget {
           style: const TextStyle(
             fontSize: 7.5,
             fontWeight: FontWeight.w700,
-            color: _Palette.textDark,
+            color: AppPalette.textDark,
           ),
         ),
       ],
@@ -641,13 +681,13 @@ class _MealTile extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 8,
                     fontWeight: FontWeight.w700,
-                    color: _Palette.textDark,
+                    color: AppPalette.textDark,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   kcalText,
-                  style: const TextStyle(fontSize: 6.5, color: _Palette.grey),
+                  style: const TextStyle(fontSize: 6.5, color: AppPalette.grey),
                 ),
               ],
             ),
@@ -656,7 +696,7 @@ class _MealTile extends StatelessWidget {
             width: 20,
             height: 20,
             decoration: const BoxDecoration(
-              color: _Palette.softGreen,
+              color: AppPalette.primaryPurple,
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.add, size: 12, color: Colors.white),
@@ -667,9 +707,6 @@ class _MealTile extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// BOTTOM BANNER
-// ---------------------------------------------------------------------------
 class _BottomBanner extends StatelessWidget {
   const _BottomBanner();
 
@@ -695,7 +732,7 @@ class _BottomBanner extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: _Palette.peach,
+              color: AppPalette.peach,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Row(
@@ -721,12 +758,12 @@ class _BottomBanner extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
-                        color: _Palette.textDark,
+                        color: AppPalette.textDark,
                       ),
                     ),
                     Text(
                       '332/539 Kcal',
-                      style: TextStyle(fontSize: 8, color: _Palette.textDark),
+                      style: TextStyle(fontSize: 8, color: AppPalette.textDark),
                     ),
                   ],
                 ),

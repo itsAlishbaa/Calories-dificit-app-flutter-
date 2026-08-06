@@ -12,12 +12,16 @@ class WelcomeScreen extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        // Premium Dark Gradient Background
+        // Premium Purple Theme Gradient Background
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+            colors: [
+              Color(0xFF2A1535), // Dark Purple base
+              Color(0xFF6B3382), // Deep Purple
+              Color(0xFF9653AC), // Your Primary Theme Color
+            ],
           ),
         ),
         child: SafeArea(
@@ -32,16 +36,16 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.05),
+                      color: Colors.white.withOpacity(0.1),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withOpacity(0.3),
                         width: 1.5,
                       ),
                     ),
                     child: const Icon(
                       Icons.auto_awesome_rounded,
                       size: 48,
-                      color: Color(0xFF00F2FE),
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -59,25 +63,25 @@ class WelcomeScreen extends StatelessWidget {
                     "Select an option to get started",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withOpacity(0.8),
                     ),
                   ),
                   const SizedBox(height: 48),
 
-                  // Main Glass Card Box (As in drawing)
+                  // Main Glass Card Box
                   Container(
                     width: size.width * 0.9,
                     padding: const EdgeInsets.all(24.0),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08),
+                      color: Colors.white.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(24.0),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.18),
+                        color: Colors.white.withOpacity(0.25),
                         width: 1.5,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withOpacity(0.25),
                           blurRadius: 25,
                           offset: const Offset(0, 10),
                         ),
@@ -91,14 +95,15 @@ class WelcomeScreen extends StatelessWidget {
                             height: 52,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF4FACFE), Color(0xFF00F2FE)],
+                                colors: [
+                                  Color(0xFF9653AC),
+                                  Color(0xFFB86BD8),
+                                ],
                               ),
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(
-                                    0xFF00F2FE,
-                                  ).withOpacity(0.3),
+                                  color: const Color(0xFF9653AC).withOpacity(0.4),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -126,7 +131,7 @@ class WelcomeScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87, // FIXED HERE
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -142,10 +147,10 @@ class WelcomeScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                color: const Color(0xFF00F2FE),
+                                color: Colors.white,
                                 width: 1.5,
                               ),
-                              color: Colors.white.withOpacity(0.05),
+                              color: Colors.white.withOpacity(0.1),
                             ),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -178,6 +183,6 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    ); // FIXED BRACKETS & SEMICOLON
+    );
   }
 }
